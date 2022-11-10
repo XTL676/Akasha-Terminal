@@ -71,6 +71,29 @@ namespace aka {
     {
         aka::Print("Error:" + msg + "[" + QString::number(code) + "]", QColor("red"));
     }
+
+    // 判断字符串是否为纯数字
+    static bool StringIsNumber(QString &qstrSrc)
+    {
+        QByteArray ba = qstrSrc.toLatin1();
+        const char *s = ba.data();
+        bool bret = true;
+        while(*s)
+        {
+            if(*s>='0' && *s<='9')
+            {
+
+            }
+            else
+            {
+                bret = false;
+                break;
+            }
+            s++;
+        }
+        return bret;
+    }
+
 }
 
 #endif // AKA_GLOBAL_H

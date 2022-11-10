@@ -19,7 +19,8 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"help", "List all available commands."},&AkaBasicCmd::help},
     {{"exit", "ex", "e", "Exit Akasha Terminal."},&AkaBasicCmd::exit},
     {{"ls", "List all files and dirs on current path."},nullptr},
-    {{"resize", "Resize window.[resize width height]"},&AkaDisplayCmd::resize}
+    {{"resize", "Resize window.[resize width height]"},&AkaDisplayCmd::resize},
+    {{"refont", "Set font.[refont (size) (fontname)]"},&AkaDisplayCmd::refont}
 };
 
 #endif // AKA_COMMANDS_H
