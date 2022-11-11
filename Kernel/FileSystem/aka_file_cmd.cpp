@@ -47,8 +47,10 @@ int AkaFileCmd::rm(QStringList args)
     else if(args[1] == "-d")
     {
         // 删除文件夹
-        if(AkaFileSystem::GetFileSystem()->DeleteDir(args[2]))
-            aka::Print("Delete directory (" + args[2] + ") successfully.", QColor("green"));
+        QString dirPath = args[2];
+        if(!args[2].startsWith("/")) dirPath = "/" + dirPath; // 如果不以/开头，则默认删除根目录下的文件夹
+        if(AkaFileSystem::GetFileSystem()->DeleteDir(dirPath))
+            aka::Print("Delete directory (" + dirPath + ") successfully.", QColor("green"));
     }
     else
         aka::PrintError("Invalid parameter.Should be -f for file or -d for dir.", KAkaInvalidParameter);

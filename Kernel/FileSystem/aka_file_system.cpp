@@ -116,7 +116,7 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
 {
     aka::PathReplace(path);
 
-    QString dirPath = RootDirPath_ + path + "/";
+    QString dirPath = RootDirPath_ + path + "/";  // 如果不以/开头，则默认在根目录下创建文件夹
 
     if(!QDir(dirPath).exists())
     {
