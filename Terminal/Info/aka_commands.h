@@ -22,7 +22,7 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"ls", "List all files and dirs on current path."},nullptr},
     {{"resize", "Resize window.[resize width height]"},&AkaDisplayCmd::resize},
     {{"refont", "Set font.[refont (size) (fontname)]"},&AkaDisplayCmd::refont},
-    {{"mkdir", "md", "Create directory."},&AkaFileCmd::mkdir}
+    {{"mkdir", "md", "Create directory.[mkdir path]"},&AkaFileCmd::mkdir}
 };
 
 #endif // AKA_COMMANDS_H
