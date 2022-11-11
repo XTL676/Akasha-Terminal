@@ -51,6 +51,8 @@ bool AkaFileSystem::DetectDataFolder()
 ///
 Directory AkaFileSystem::LoadDir(QString dirPath)
 {
+    if(dirPath == "/") return *RooDirectory_;
+
     QString fullPath = RootDirPath_ + "/" + dirPath + ".dir";
     aka::PathReplace(fullPath);
 
@@ -59,7 +61,7 @@ Directory AkaFileSystem::LoadDir(QString dirPath)
     QFile dir(fullPath);
     if(!dir.exists())
     {
-        aka::PrintError("Directory not exists.", KAkaInvalidPath);
+        aka::PrintError("Directory data file not exists.", KAkaInvalidPath);
         return inDir;
     }
 
@@ -84,7 +86,7 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
         File* fileObj = (File*)file;
         // 序列化File对象
         QFile f(outputDatFullPath);
-        f.open(QIODevice::WriteOnly | QIODevice::Text);
+        f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
         QDataStream out(&f);
         out << *fileObj;
         f.close();
@@ -96,7 +98,7 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
         Directory* dirObj = (Directory*)file;
         // 序列化Directory对象
         QFile f(outputDatFullPath);
-        f.open(QIODevice::WriteOnly | QIODevice::Text);
+        f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
         QDataStream out(&f);
         out << *dirObj;
         f.close();
@@ -113,7 +115,8 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
 {
     aka::PathReplace(path);
 
-    QString dirPath = path == "/" ? RootDirPath_ + "/" + path + "/" : RootDirPath_ + "/";
+    QString dirPath = RootDirPath_ + path + "/";
+
     if(!QDir(dirPath).exists())
     {
         aka::PrintError("Directory path not exists.", KAkaInvalidPath);
@@ -129,7 +132,24 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
     if(!QDir(dirPath).mkdir(name))
         return false;
 
-    QString ParentFolderName = path == "/" ? "/" : dirPath.split("/").back();
+    QString ParentFolderName;
+    if(path == "/")
+    {
+        ParentFolderName = "/";
+        AkaFileSystem::GetFileSystem()->GetRootDirectory()->AddSubFolder(name);
+    }
+    else
+    {
+        QStringList dirPath_s = path.split("/");
+        dirPath_s.removeAll("");
+        ParentFolderName = dirPath_s.back();
+        // 获取父类的.dir文件
+        Directory dir = LoadDir("/" + dirPath_s.join("/"));
+        dir.AddSubFolder(name);
+        // 刷新父类的.dir文件
+        dirPath_s.pop_back();
+        GenFileData(&dir, RootDirPath_ + "/" + dirPath_s.join("/"));
+    }
     Directory dir(ParentFolderName, name, "SYSTEM");
     AkaFileSystem::GetFileSystem()->GenFileData(&dir, AkaFileSystem::GetFileSystem()->RootDirPath_ + "/" + path);
     return true;

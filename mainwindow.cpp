@@ -25,13 +25,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
-    // TODO TEST
-//    qDebug() << AkaFileSystem::GetFileSystem()->GetRootDirectory()->GetName();
-//    qDebug() << AkaFileSystem::GetFileSystem()->GetRootDirectory()->GetSubFolderNames();
-//    qDebug() << AkaFileSystem::GetFileSystem()->GetRootDirectory()->GetSubFileNames();
-//    AkaFileSystem::GetFileSystem()->CreateDir("/", "abc");
-//    qDebug() << AkaFileSystem::GetFileSystem()->LoadDir("/abc").GetName();
-
     // 设置窗口基本属性
     this->setMinimumSize(aka::KAkaWindowMinimumSize); // 窗口最小大小
     this->setWindowTitle(aka::KAkaWindowDefaultTitle); // 窗口标题

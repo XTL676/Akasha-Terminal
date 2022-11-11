@@ -18,7 +18,7 @@ public:
     Directory LoadDir(QString dirPath);
     // 生成数据文件(文件和文件夹的序列化)
     void GenFileData(BaseFile* file, QString path);
-    // TODO 创建文件夹
+    // 创建文件夹
     bool CreateDir(QString path, QString name);
     // TODO 创建文件
 
