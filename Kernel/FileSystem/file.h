@@ -15,6 +15,11 @@ private:
 
 public:
     bool IsChildClass() override;
+
+    File();
+    File(QString ParentFolderName,
+         QString Name, QString Suffix,
+         QString Owner, QString Content);
     File(QString ParentFolderName,
          QString Name, QString Suffix,
          QDateTime CreateDateTime, QDateTime ModifyDateTime,

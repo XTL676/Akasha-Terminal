@@ -26,7 +26,7 @@ const QString AkaFileSystem::GetRootDirPath()
 
 Directory *AkaFileSystem::GetRootDirectory()
 {
-    return RooDirectory_;
+    return RootDirectory_;
 }
 
 bool AkaFileSystem::Save()
@@ -52,7 +52,7 @@ bool AkaFileSystem::DetectDataFolder()
 ///
 Directory AkaFileSystem::LoadDir(QString dirPath)
 {
-    if(dirPath == "/") return *RooDirectory_;
+    if(dirPath == "/") return *RootDirectory_;
 
     QString fullPath = RootDirPath_ + "/" + dirPath + ".dir";
     aka::PathReplace(fullPath);
@@ -152,7 +152,7 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
         GenFileData(&dir, RootDirPath_ + "/" + dirPath_s.join("/"));
     }
     Directory dir(ParentFolderName, name, "SYSTEM");
-    AkaFileSystem::GetFileSystem()->GenFileData(&dir, AkaFileSystem::GetFileSystem()->RootDirPath_ + "/" + path);
+    AkaFileSystem::GetFileSystem()->GenFileData(&dir, RootDirPath_ + "/" + path);
     return true;
 }
 
@@ -210,6 +210,56 @@ bool AkaFileSystem::DeleteDir(QString path)
     return true;
 }
 
+/// 创建文件
+/// \brief AkaFileSystem::CreateFile
+/// \param path 文件所在路径("/")
+/// \param name 文件名称(不带后缀名)
+/// \param suffix 文件后缀名
+/// \return 是否成功创建文件
+///
+bool AkaFileSystem::CreateFileA(QString path, QString name, QString suffix, QString content)
+{
+    if(path == "/")
+    {
+        // 向父级文件夹添加记录
+        if(!suffix.isEmpty())
+            RootDirectory_->AddSubFile(name + "." + suffix);
+        else
+            RootDirectory_->AddSubFile(name);
+
+        File file("/", name, suffix, "SYSTEM", content);
+        GenFileData(&file, RootDirPath_ + path);
+        return true;
+    }
+
+    QStringList list = path.split("/");
+    list.removeAll("");
+    QString ParentDirName = list.back();
+    list.pop_back();
+    QString ParentDirAtPath = "/" + list.join("/");
+
+    // 反序列化父级文件夹
+    Directory dir;
+    QFile f(RootDirPath_ + ParentDirAtPath + "/" + ParentDirName + ".dir");
+    f.open(QIODevice::ReadOnly);
+    QDataStream in(&f);
+    in >> dir;
+    f.close();
+
+    // 向父级文件夹添加记录
+    if(!suffix.isEmpty())
+        dir.AddSubFile(name + "." + suffix);
+    else
+        dir.AddSubFile(name);
+    GenFileData(&dir, RootDirPath_ + ParentDirAtPath);
+
+    //序列化文件
+    File file(ParentDirName, name, suffix, "SYSTEM", content);
+    GenFileData(&file, RootDirPath_ + path);
+
+    return true;
+}
+
 AkaFileSystem::AkaFileSystem()
 {
     RootDirPath_ = QCoreApplication::applicationDirPath() + "/" +
@@ -217,15 +267,15 @@ AkaFileSystem::AkaFileSystem()
                 aka::KAkaFileSystemRootFolderName;
 
     // 设置根文件夹("/")对象
-    RooDirectory_ = new Directory("", "/", "SYSTEM");
+    RootDirectory_ = new Directory("", "/", "SYSTEM");
 
     // 读取根目录
     for(auto file:QDir(RootDirPath_).entryInfoList())
     {
         if(file.suffix() == "dir")
-            this->RooDirectory_->AddSubFolder(file.fileName());
+            this->RootDirectory_->AddSubFolder(file.fileName());
         else if(file.suffix() == "dat")
-            this->RooDirectory_->AddSubFile(file.fileName());
+            this->RootDirectory_->AddSubFile(file.fileName());
     }
 }
 

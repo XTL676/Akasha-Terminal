@@ -16,18 +16,20 @@ public:
     bool DetectDataFolder();
     // 加载文件夹
     Directory LoadDir(QString dirPath);
-    // 生成数据文件(文件和文件夹的序列化)
-    void GenFileData(BaseFile* file, QString path);
     // 创建文件夹
     bool CreateDir(QString path, QString name);
     // 删除文件夹
     bool DeleteDir(QString path);
-    // TODO 创建文件
+    // 创建文件
+    bool CreateFileA(QString path, QString name, QString suffix, QString content);
+    // 删除文件
 
 private:
     static AkaFileSystem* Instance_;
     QString RootDirPath_;
-    Directory* RooDirectory_;
+    Directory* RootDirectory_;
+    // 生成数据文件(文件和文件夹的序列化)
+    void GenFileData(BaseFile* file, QString path);
 
 private:
     AkaFileSystem();

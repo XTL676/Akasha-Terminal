@@ -18,6 +18,8 @@ public:
     virtual bool IsChildClass() = 0;
     // 获取名称
     const QString GetName();
+    // 获取父级文件夹名称
+    const QString GetParentFolderName();
 };
 
 #endif // BASEFILE_H

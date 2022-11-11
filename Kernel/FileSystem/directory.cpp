@@ -3,7 +3,8 @@
 
 QDataStream &operator<<(QDataStream &output , const Directory &dataInfo)
 {
-    output << dataInfo.SubFolderNames_
+    output << dataInfo.ParentFolderName_
+           << dataInfo.SubFolderNames_
            << dataInfo.SubFileNames_
            << dataInfo.Name_
            << dataInfo.Owner_
@@ -14,7 +15,8 @@ QDataStream &operator<<(QDataStream &output , const Directory &dataInfo)
 
 QDataStream &operator>>(QDataStream &input , Directory &dataInfo)
 {
-    input >> dataInfo.SubFolderNames_
+    input >> dataInfo.ParentFolderName_
+          >> dataInfo.SubFolderNames_
           >> dataInfo.SubFileNames_
           >> dataInfo.Name_
           >> dataInfo.Owner_

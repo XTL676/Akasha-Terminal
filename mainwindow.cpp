@@ -25,6 +25,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
+    // TEST
+//    AkaFileSystem::GetFileSystem()->CreateFileA(
+//                "/abc/aaaa", "test", "txt",
+//                "I love holidays,because during holidays ,I can do everything I like,and study something new.Now the summer holidays is coming,I'm going to do something meaningful."
+//                );
+
     // 设置窗口基本属性
     this->setMinimumSize(aka::KAkaWindowMinimumSize); // 窗口最小大小
     this->setWindowTitle(aka::KAkaWindowDefaultTitle); // 窗口标题

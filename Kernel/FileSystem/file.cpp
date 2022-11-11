@@ -29,6 +29,19 @@ bool File::IsChildClass()
     return true;
 }
 
+File::File()
+{
+}
+
+File::File(QString ParentFolderName, QString Name, QString Suffix, QString Owner, QString Content)
+{
+    ParentFolderName_ = ParentFolderName;
+    Name_ = Name;
+    Suffix_ = Suffix;
+    Owner_ = Owner;
+    Content_ = Content;
+}
+
 File::File(
        QString ParentFolderName,
        QString Name, QString Suffix,
