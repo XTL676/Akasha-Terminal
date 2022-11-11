@@ -28,8 +28,11 @@ private:
     static AkaFileSystem* Instance_;
     QString RootDirPath_;
     Directory* RootDirectory_;
+
     // 生成数据文件(文件和文件夹的序列化)
     void GenFileData(BaseFile* file, QString path);
+    // 初始化此系统
+    void Initialize();
 
 private:
     AkaFileSystem();

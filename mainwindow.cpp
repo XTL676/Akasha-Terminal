@@ -5,10 +5,7 @@
 #include "aka_global.h"
 
 #include <QDebug>
-#include "Kernel/FileSystem/aka_file_system.h"
-#include "Kernel/FileSystem/directory.h"
-#include "Kernel/FileSystem/file.h"
-#include "Terminal/utils.h"
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -25,12 +22,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
-    // TEST
-//    AkaFileSystem::GetFileSystem()->CreateFileA(
-//                "/abc/aaaa", "test", "txt",
-//                "I love holidays,because during holidays ,I can do everything I like,and study something new.Now the summer holidays is coming,I'm going to do something meaningful."
-//                );
-
     // 设置窗口基本属性
     this->setMinimumSize(aka::KAkaWindowMinimumSize); // 窗口最小大小
     this->setWindowTitle(aka::KAkaWindowDefaultTitle); // 窗口标题
@@ -38,6 +29,7 @@ void MainWindow::Init()
 
     // 设置主要编辑区域属性
     this->ui->MainInputArea->setFont(aka::KAkaInputDefaultFont); // 字体
+
     // 连接主编辑区域光标改变信号和槽
     connect(ui->MainInputArea, SIGNAL(cursorPositionChanged()), SLOT(on_MainInputArea_cursorPositionChanged()));
 

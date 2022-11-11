@@ -260,8 +260,10 @@ bool AkaFileSystem::CreateFileA(QString path, QString name, QString suffix, QStr
     return true;
 }
 
-AkaFileSystem::AkaFileSystem()
+void AkaFileSystem::Initialize()
 {
+    if(Instance_ != nullptr) return;
+
     RootDirPath_ = QCoreApplication::applicationDirPath() + "/" +
                 aka::KAkaDataFolderName + "/" +
                 aka::KAkaFileSystemRootFolderName;
@@ -273,10 +275,23 @@ AkaFileSystem::AkaFileSystem()
     for(auto file:QDir(RootDirPath_).entryInfoList())
     {
         if(file.suffix() == "dir")
-            this->RootDirectory_->AddSubFolder(file.fileName());
+        {
+            RootDirectory_->AddSubFolder(file.fileName());
+            if(aka::KAkaDebugOutput)
+                aka::Print("[Initializing FileSystem]: Detected /" + file.fileName());
+        }
         else if(file.suffix() == "dat")
-            this->RootDirectory_->AddSubFile(file.fileName());
+        {
+            RootDirectory_->AddSubFolder(file.fileName());
+            if(aka::KAkaDebugOutput)
+                aka::Print("[Initializing FileSystem]: Detected /" + file.fileName());
+        }
     }
+}
+
+AkaFileSystem::AkaFileSystem()
+{
+    Initialize();
 }
 
 AkaFileSystem::~AkaFileSystem()

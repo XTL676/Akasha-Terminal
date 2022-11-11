@@ -8,6 +8,8 @@
 #include "Terminal/UI/aka_plain_text_edit.h"
 
 namespace aka {
+    const bool KAkaDebugOutput = false; // 是否开启调试输出
+
     const QString KAkaWindowDefaultTitle = "Akasha Terminal";
     const QSize KAkaWindowDefaultSize = QSize(1920, 1080);
     const QSize KAkaWindowMinimumSize = QSize(560, 310);
