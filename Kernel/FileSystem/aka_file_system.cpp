@@ -126,7 +126,7 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
     if(QDir(dirPath + name).exists())
     {
         aka::PrintError("Directory already exists.", KAkaFileAlreadyExists);
-        return true;
+        return false;
     }
 
     if(!QDir(dirPath).mkdir(name))

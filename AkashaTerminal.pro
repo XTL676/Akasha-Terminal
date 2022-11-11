@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     Kernel/Basic/aka_basic_cmd.cpp \
     Kernel/ExceptionSystem/aka_exception_system.cpp \
+    Kernel/FileSystem/aka_file_cmd.cpp \
     Kernel/FileSystem/aka_file_system.cpp \
     Kernel/FileSystem/base_file.cpp \
     Kernel/FileSystem/directory.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     Kernel/Basic/aka_basic_cmd.h \
     Kernel/ExceptionSystem/aka_exception_system.h \
     Kernel/ExceptionSystem/aka_status_code.h \
+    Kernel/FileSystem/aka_file_cmd.h \
     Kernel/FileSystem/aka_file_system.h \
     Kernel/FileSystem/base_file.h \
     Kernel/FileSystem/directory.h \

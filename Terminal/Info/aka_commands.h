@@ -2,7 +2,8 @@
 #define AKA_COMMANDS_H
 #include <QStringList>
 #include <QMap>
-#include <Terminal/Display/aka_display_cmd.h>
+#include "Kernel/FileSystem/aka_file_cmd.h"
+#include "Terminal/Display/aka_display_cmd.h"
 #include "Kernel/Basic/aka_basic_cmd.h"
 
 typedef int(*builtin_func)(QStringList);
@@ -20,7 +21,8 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"exit", "ex", "e", "Exit Akasha Terminal."},&AkaBasicCmd::exit},
     {{"ls", "List all files and dirs on current path."},nullptr},
     {{"resize", "Resize window.[resize width height]"},&AkaDisplayCmd::resize},
-    {{"refont", "Set font.[refont (size) (fontname)]"},&AkaDisplayCmd::refont}
+    {{"refont", "Set font.[refont (size) (fontname)]"},&AkaDisplayCmd::refont},
+    {{"mkdir", "md", "Create directory."},&AkaFileCmd::mkdir}
 };
 
 #endif // AKA_COMMANDS_H
