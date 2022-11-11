@@ -28,9 +28,10 @@ void AkaPlainTextEdit::EnterEvent()
     AkaInputSystem* input = AkaInputSystem::GetInputSystem();
     QStringList parameters = input->SplitLine(input->GetLineFromPlain(line));
 
-    //TODO 执行命令
+    // 执行命令
     int status = 1; // 解决“开启时马上输入命令并回车程序会异常退出的BUG”
-    status = input->Execute(parameters);
+    if(parameters.length() >= 1)
+        status = input->Execute(parameters);
     if(status <= KAkaNormalExit)
         qApp->exit(status); // 关闭程序
 
