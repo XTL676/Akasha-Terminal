@@ -20,6 +20,8 @@ public:
     void GenFileData(BaseFile* file, QString path);
     // 创建文件夹
     bool CreateDir(QString path, QString name);
+    // 删除文件夹
+    bool DeleteDir(QString path);
     // TODO 创建文件
 
 private:

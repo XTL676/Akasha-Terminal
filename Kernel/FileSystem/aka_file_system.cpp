@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QDataStream>
+#include <QDataStream>
 #include "directory.h"
 #include "file.h"
 #include "Kernel/ExceptionSystem/aka_status_code.h"
@@ -119,7 +120,7 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
 
     if(!QDir(dirPath).exists())
     {
-        aka::PrintError("Directory path not exists.", KAkaInvalidPath);
+        aka::PrintError("Directory path(" + path + ") not exists.", KAkaInvalidPath);
         return false;
     }
 
@@ -152,6 +153,51 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
     }
     Directory dir(ParentFolderName, name, "SYSTEM");
     AkaFileSystem::GetFileSystem()->GenFileData(&dir, AkaFileSystem::GetFileSystem()->RootDirPath_ + "/" + path);
+    return true;
+}
+
+/// 删除文件夹
+/// \brief AkaFileSystem::DeleteDir
+/// \param path 文件夹路径("/")
+/// \return 是否成功删除
+///
+bool AkaFileSystem::DeleteDir(QString path)
+{
+    QString fullPath = RootDirPath_ + path;
+    if(!QFile(fullPath).exists())
+    {
+        aka::PrintError("Directory data file not exists.", KAkaInvalidPath);
+        return false;
+    }
+
+    QStringList list = path.split("/");
+    list.removeAll("");
+    QString deleteDirName = list.back();
+    list.pop_back();
+    if(list.isEmpty())
+    {
+        // 删除记录
+        AkaFileSystem::GetFileSystem()->GetRootDirectory()->RemoveSubFolder(deleteDirName);
+        // 删除文件夹
+        QDir(fullPath).removeRecursively();
+        return true;
+    }
+    QString parentDirName = list.back();
+    QString parentDirPath = "/" + list.join("/"); // 父级目录路径
+    list.pop_back();
+    QString parentDirAtPath = "/" + list.join("/"); // 父级目录所在的目录路径
+
+    Directory dir;
+    QFile f(RootDirPath_ + parentDirAtPath + "/" + parentDirName + ".dir");
+    f.open(QIODevice::ReadOnly);
+    QDataStream in(&f);
+    in >> dir;
+    f.close();
+
+    dir.RemoveSubFolder(deleteDirName);
+    GenFileData(&dir, RootDirPath_ + parentDirAtPath);
+    QDir(fullPath).removeRecursively();
+    QFile(RootDirPath_ + parentDirPath + "/" + deleteDirName + ".dir").remove();
     return true;
 }
 
