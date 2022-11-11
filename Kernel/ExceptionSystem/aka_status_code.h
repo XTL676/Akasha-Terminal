@@ -11,4 +11,5 @@ const int KAkaMissingQuote = 0x105; // 缺少引号或引号不是成对出现
 const int KAkaBrokenDataFolder = 0x110;
 const int KAkaInvalidPath = 0x106;
 const int KAkaFileAlreadyExists = 0x107;
+const int KAkaInvalidParameter = 0x108;
 #endif // AKA_STATUS_CODE_H

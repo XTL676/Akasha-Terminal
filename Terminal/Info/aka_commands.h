@@ -22,7 +22,8 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"ls", "List all files and dirs on current path."},nullptr},
     {{"resize", "Resize window.[resize width height]"},&AkaDisplayCmd::resize},
     {{"refont", "Set font.[refont (size) (fontname)]"},&AkaDisplayCmd::refont},
-    {{"mkdir", "md", "Create directory.[mkdir path]"},&AkaFileCmd::mkdir}
+    {{"mkdir", "md", "Create directory.[mkdir path]"},&AkaFileCmd::mkdir},
+    {{"rm", "Remove directory or file.[rm -f filepath] or [rm -d dirpath]"},&AkaFileCmd::rm}
 };
 
 #endif // AKA_COMMANDS_H

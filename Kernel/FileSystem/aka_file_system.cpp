@@ -163,6 +163,13 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
 ///
 bool AkaFileSystem::DeleteDir(QString path)
 {
+    // 禁止删除根目录
+    if(path == "/")
+    {
+        aka::PrintError("Invalid directory path \"/\".", KAkaInvalidPath);
+        return false;
+    }
+
     QString fullPath = RootDirPath_ + path;
     if(!QFile(fullPath).exists())
     {
@@ -180,6 +187,8 @@ bool AkaFileSystem::DeleteDir(QString path)
         AkaFileSystem::GetFileSystem()->GetRootDirectory()->RemoveSubFolder(deleteDirName);
         // 删除文件夹
         QDir(fullPath).removeRecursively();
+        // 删除.dir文件
+        QFile(RootDirPath_ + "/" + deleteDirName + ".dir").remove();
         return true;
     }
     QString parentDirName = list.back();

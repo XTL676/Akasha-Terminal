@@ -25,9 +25,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
-    // TEST
-    AkaFileSystem::GetFileSystem()->DeleteDir("/abc/aaa/bbb");
-
     // 设置窗口基本属性
     this->setMinimumSize(aka::KAkaWindowMinimumSize); // 窗口最小大小
     this->setWindowTitle(aka::KAkaWindowDefaultTitle); // 窗口标题
