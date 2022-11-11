@@ -23,7 +23,8 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"resize", "Resize window.[resize width height]"},&AkaDisplayCmd::resize},
     {{"refont", "Set font.[refont (size) (fontname)]"},&AkaDisplayCmd::refont},
     {{"mkdir", "md", "Create directory.[mkdir path]"},&AkaFileCmd::mkdir},
-    {{"rm", "Remove directory or file.[rm -f filepath] or [rm -d dirpath]"},&AkaFileCmd::rm}
+    {{"rm", "Remove directory or file.[rm -f filepath] or [rm -d dirpath]"},&AkaFileCmd::rm},
+    {{"mkf", "mf", "Create file.[mkf path (content)]"},&AkaFileCmd::mkf}
 };
 
 #endif // AKA_COMMANDS_H

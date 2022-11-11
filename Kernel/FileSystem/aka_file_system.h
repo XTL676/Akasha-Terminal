@@ -22,7 +22,7 @@ public:
     bool DeleteDir(QString path);
     // 创建文件
     bool CreateFileA(QString path, QString name, QString suffix, QString content);
-    // 删除文件
+    // TODO 删除文件
 
 private:
     static AkaFileSystem* Instance_;

@@ -2,6 +2,7 @@
 #include "Kernel/ExceptionSystem/aka_status_code.h"
 #include "aka_file_system.h"
 #include "aka_global.h"
+#include <QFile>
 
 int AkaFileCmd::mkdir(QStringList args)
 {
@@ -42,7 +43,7 @@ int AkaFileCmd::rm(QStringList args)
 
     if(args[1] == "-f")
     {
-        // 删除文件
+        // TODO 删除文件
     }
     else if(args[1] == "-d")
     {
@@ -56,4 +57,45 @@ int AkaFileCmd::rm(QStringList args)
         aka::PrintError("Invalid parameter.Should be -f for file or -d for dir.", KAkaInvalidParameter);
 
     return 1;
+}
+
+int AkaFileCmd::mkf(QStringList args)
+{
+    if(args.length() < 2)
+    {
+        aka::PrintError("No or missing parameters.Should be [mkf path]", KAkaMissingParameter);
+        return 1;
+    }
+    else if(args.length() > 3)
+    {
+        aka::PrintError("Too many parameters.", KAkaTooManyParameters);
+        return 1;
+    }
+
+    // 文件内容，没有参数默认无内容
+    QString content = args.length() == 3 ? args[2] : "";
+
+    // 格式化路径变量
+    QString args1 = args[1];
+    aka::PathReplace(args1);
+
+    // 分析文件路径
+    QStringList t_list1 = args1.split("/");
+    t_list1.removeAll("");
+
+    QString fileFullName = t_list1.back(); // name + suffix
+    QStringList t_list2 = fileFullName.split(".");
+    t_list2.removeAll("");
+    QString suffix = t_list2.back();
+    t_list2.pop_back();
+    QString name = t_list2.join(".");
+
+    t_list1.pop_back();
+    QString path = "/" + t_list1.join("/");
+
+    // 创建文件.dat
+    if(AkaFileSystem::GetFileSystem()->CreateFileA(path, name, suffix, content))
+        aka::Print("Create directory \"" + fileFullName + "\" successfully.(" + args[1] + ")", QColor("green"));
+
+    return true;
 }
