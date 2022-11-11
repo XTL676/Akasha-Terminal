@@ -1,5 +1,4 @@
 #include "aka_exception_system.h"
-#include "aka_global.h"
 
 // 初始化静态成员
 AkaExceptionSystem *AkaExceptionSystem::Instance_ = nullptr;

@@ -6,10 +6,10 @@
 class AkaExceptionSystem
 {
 public:
-    static AkaExceptionSystem* Instance_;
-
-public:
     static AkaExceptionSystem* GetExceptionSystem();
+
+private:
+    static AkaExceptionSystem* Instance_;
 
 private:
     AkaExceptionSystem();

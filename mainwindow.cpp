@@ -1,11 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <windows.h>
 #include <QTextBlock>
 #include "aka_global.h"
 
 #include <QDebug>
+#include "Kernel/FileSystem/aka_file_system.h"
+#include "Kernel/FileSystem/directory.h"
+#include "Kernel/FileSystem/file.h"
+#include "Terminal/utils.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,6 +25,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::Init()
 {
+    // TODO TEST
+//    qDebug() << AkaFileSystem::GetFileSystem()->GetRootDirectory()->GetName();
+//    qDebug() << AkaFileSystem::GetFileSystem()->GetRootDirectory()->GetSubFolderNames();
+//    qDebug() << AkaFileSystem::GetFileSystem()->GetRootDirectory()->GetSubFileNames();
+//    AkaFileSystem::GetFileSystem()->CreateDir("/", "abc");
+//    qDebug() << AkaFileSystem::GetFileSystem()->LoadDir("/abc").GetName();
+
     // 设置窗口基本属性
     this->setMinimumSize(aka::KAkaWindowMinimumSize); // 窗口最小大小
     this->setWindowTitle(aka::KAkaWindowDefaultTitle); // 窗口标题

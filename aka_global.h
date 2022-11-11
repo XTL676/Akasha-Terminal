@@ -18,6 +18,9 @@ namespace aka {
     const QChar KAkaConselSymbol = '$';
     const QString KAkaConselDefaultHead = QString("root@Akasha:~") + KAkaConselSymbol;
 
+    const QString KAkaDataFolderName = "data";
+    const QString KAkaFileSystemRootFolderName = "files";
+
     // 获取主窗口实例
     static QMainWindow* GetMainWindow()
     {
@@ -92,6 +95,14 @@ namespace aka {
             s++;
         }
         return bret;
+    }
+
+    // 将所有\ \\ // 转为/
+    inline static void PathReplace(QString &path)
+    {
+        path.replace("//", "/");
+        path.replace("\\", "/");
+        path.replace("\\\\", "/");
     }
 
 }
