@@ -9,11 +9,14 @@ class File: public BaseFile
     friend QDataStream &operator<<(QDataStream &output , const File &dataInfo);
     // 重载反序列化
     friend QDataStream &operator>>(QDataStream &input , File &dataInfo);
+
 private:
     QString Suffix_; // 后缀名
     QString Content_; // 文件内容
 
 public:
+    QString GetSuffix();
+
     bool IsChildClass() override;
 
     File();

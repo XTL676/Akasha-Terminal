@@ -24,6 +24,11 @@ QDataStream &operator>>(QDataStream &input , File &dataInfo)
     return input;
 }
 
+QString File::GetSuffix()
+{
+    return Suffix_;
+}
+
 bool File::IsChildClass()
 {
     return true;

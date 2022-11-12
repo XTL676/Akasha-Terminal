@@ -74,8 +74,8 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
     if(dynamic_cast<File*>(file) != NULL)
     {
         // 为File类
-        outputDatFullPath += ".dat";
         File* fileObj = (File*)file;
+        outputDatFullPath += !fileObj->GetSuffix().isEmpty() ? "." + fileObj->GetSuffix() + ".dat" : ".dat";
         // 序列化File对象
         QFile f(outputDatFullPath);
         f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
