@@ -6,16 +6,6 @@
 
 #include <QDebug>
 
-// 初始化静态成员
-AkaInputSystem *AkaInputSystem::Instance_ = nullptr;
-
-AkaInputSystem *AkaInputSystem::GetInputSystem()
-{
-    if(Instance_ == nullptr)
-        Instance_ = new AkaInputSystem();
-    return Instance_;
-}
-
 QString AkaInputSystem::GetLineFromPlain(QString in)
 {
     return in.mid(in.indexOf(aka::KAkaConselSymbol)+1);
@@ -107,6 +97,4 @@ AkaInputSystem::AkaInputSystem()
 
 AkaInputSystem::~AkaInputSystem()
 {
-    if(Instance_ != nullptr)
-        delete Instance_;
 }

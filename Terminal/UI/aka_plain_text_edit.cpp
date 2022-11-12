@@ -2,7 +2,7 @@
 #include <QTextBlock>
 #include <QApplication>
 #include "Kernel/ExceptionSystem/aka_status_code.h"
-#include "Terminal/Input/aka_input_system.h"
+#include "Terminal/terminal_manager.h"
 #include "aka_global.h"
 
 AkaPlainTextEdit::AkaPlainTextEdit(QWidget *parent)
@@ -25,7 +25,7 @@ void AkaPlainTextEdit::EnterEvent()
     QString line = document()->findBlockByLineNumber(rowNum).text(); // 获取所在行内容
 
     // 处理输入行(获取参数)
-    AkaInputSystem* input = AkaInputSystem::GetInputSystem();
+    AkaInputSystem* input = TerminalManager::GetTerminalManager()->GetInputSystem();
     QStringList parameters = input->SplitLine(input->GetLineFromPlain(line));
 
     // 执行命令
