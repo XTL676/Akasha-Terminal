@@ -84,14 +84,27 @@ int AkaFileCmd::mkf(QStringList args)
     t_list1.removeAll("");
 
     QString fileFullName = t_list1.back(); // name + suffix
-    QStringList t_list2 = fileFullName.split(".");
-    t_list2.removeAll("");
-    QString suffix = t_list2.back();
-    t_list2.pop_back();
-    QString name = t_list2.join(".");
+    QString name = "";
+    QString suffix = "";
+    QString path = "";
+    if(!fileFullName.contains("."))
+    {
+        // 文件没有后缀名
+        name = fileFullName;
+    }
+    else
+    {
+        // 文件有后缀名
+        QStringList t_list2 = fileFullName.split(".");
+        t_list2.removeAll("");
+        suffix = t_list2.back();
+
+        t_list2.pop_back();
+        name = t_list2.join(".");
+    }
 
     t_list1.pop_back();
-    QString path = "/" + t_list1.join("/");
+    path = "/" + t_list1.join("/");
 
     // 创建文件.dat
     if(KernelManager::GetKernelManager()->GetFileSystem()->CreateFileA(path, name, suffix, content))
