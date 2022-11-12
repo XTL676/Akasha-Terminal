@@ -4,8 +4,6 @@
 
 #include <QApplication>
 #include <QMainWindow>
-#include "mainwindow.h"
-#include "Terminal/UI/aka_plain_text_edit.h"
 
 namespace aka {
     const bool KAkaDebugOutput = false; // 是否开启调试输出

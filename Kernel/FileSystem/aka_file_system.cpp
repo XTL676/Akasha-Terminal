@@ -263,18 +263,19 @@ void AkaFileSystem::Initialize()
     // 读取根目录
     for(auto file:QDir(RootDirPath_).entryInfoList())
     {
+        QString name = file.baseName();
+        QStringList list = file.fileName().split(".");
+        list.removeAll("");
+        if(list.length() > 1)
+        {
+            list.pop_back();
+            name = list.join(".");
+        }
+
         if(file.suffix() == "dir")
-        {
-            RootDirectory_->AddSubFolder(file.fileName());
-            if(aka::KAkaDebugOutput)
-                KernelManager::GetKernelManager()->Print("[Initializing FileSystem]: Detected /" + file.fileName());
-        }
+            RootDirectory_->AddSubFolder(name);
         else if(file.suffix() == "dat")
-        {
-            RootDirectory_->AddSubFolder(file.fileName());
-            if(aka::KAkaDebugOutput)
-                KernelManager::GetKernelManager()->Print("[Initializing FileSystem]: Detected /" + file.fileName());
-        }
+            RootDirectory_->AddSubFile(name);
     }
 }
 
