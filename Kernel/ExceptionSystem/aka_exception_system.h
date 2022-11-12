@@ -2,8 +2,9 @@
 #define AKAEXCEPTIONSYSTEM_H
 #include <QString>
 #include <QPlainTextEdit>
+#include "Kernel/abstract_kernel_system.h"
 
-class AkaExceptionSystem
+class AkaExceptionSystem : public AbstractKernelSystem
 {
     friend class KernelManager;
 

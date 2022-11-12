@@ -1,7 +1,7 @@
 #ifndef ABSTRACTKERNELSYSTEM_H
 #define ABSTRACTKERNELSYSTEM_H
 
-#include <abstract_system.h>
+#include "abstract_system.h"
 
 class AbstractKernelSystem : public AbstractSystem
 {

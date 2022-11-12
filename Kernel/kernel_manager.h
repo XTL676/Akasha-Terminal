@@ -20,9 +20,9 @@ public:
 
 private:
     static KernelManager* Instance_;
-    QPlainTextEdit* MainEditArea_;
-    AkaExceptionSystem* ExceptionSystem_;
-    AkaFileSystem* FileSystem_;
+    QPlainTextEdit* MainEditArea_ = nullptr;
+    AkaExceptionSystem* ExceptionSystem_ = nullptr;
+    AkaFileSystem* FileSystem_ = nullptr;
 
 private:
     KernelManager();

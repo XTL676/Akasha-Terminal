@@ -1,9 +1,10 @@
 #ifndef AKAFILESYSTEM_H
 #define AKAFILESYSTEM_H
 #include <QString>
+#include "Kernel/abstract_kernel_system.h"
 #include "directory.h"
 
-class AkaFileSystem
+class AkaFileSystem : public AbstractKernelSystem
 {
     friend class KernelManager;
 

@@ -18,7 +18,7 @@ public:
 
 private:
     static TerminalManager* Instance_;
-    QPlainTextEdit* MainEditArea_;
+    QPlainTextEdit* MainEditArea_ = nullptr;
     AkaInputSystem* InputSystem_ = nullptr;
 
 private:
