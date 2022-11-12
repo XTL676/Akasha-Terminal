@@ -38,45 +38,6 @@ namespace aka {
         return nullptr;
     }
 
-    // 获取主要编辑区域控件实例
-    static AkaPlainTextEdit* GetMainPlainTextEdit()
-    {
-        MainWindow* main = (MainWindow*)GetMainWindow();
-        if(main != nullptr)
-            return main->GetMainPlainTextEdit();
-        return nullptr;
-    }
-
-    // 输出信息到主要编辑区域
-    inline static void Print(QString msg)
-    {
-        GetMainPlainTextEdit()->appendPlainText(msg);
-    }
-
-    static void Print(QString msg, QColor color)
-    {
-        // 获取主要编辑控件
-        AkaPlainTextEdit* me = aka::GetMainPlainTextEdit();
-        // 保存原来的样式
-        QTextCharFormat fmt = me->currentCharFormat();
-        QBrush cb = fmt.foreground();
-        // 字体颜色为红色
-        fmt.setForeground(QBrush(color));
-        // 应用新样式
-        me->mergeCurrentCharFormat(fmt);
-        // 输出
-        me->appendPlainText(msg);
-        // 还原样式
-        fmt.setForeground(cb);
-        me->mergeCurrentCharFormat(fmt);
-    }
-
-    // 输出错误信息
-    inline void PrintError(QString msg, int code)
-    {
-        aka::Print("Error:" + msg + "[" + QString::number(code) + "]", QColor("red"));
-    }
-
     // 判断字符串是否为纯数字
     static bool StringIsNumber(QString &qstrSrc)
     {

@@ -30,7 +30,7 @@ bool AkaFileSystem::DetectDataFolder()
     QDir root(RootDirPath_);
     if(!root.exists())
     {
-        aka::PrintError("Broken data folder.", KAkaBrokenDataFolder);
+        KernelManager::GetKernelManager()->PrintError("Broken data folder.", KAkaBrokenDataFolder);
         return false;
     }
     return true;
@@ -53,7 +53,7 @@ Directory AkaFileSystem::LoadDir(QString dirPath)
     QFile dir(fullPath);
     if(!dir.exists())
     {
-        aka::PrintError("Directory data file not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError("Directory data file not exists.", KAkaInvalidPath);
         return inDir;
     }
 
@@ -111,13 +111,13 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
 
     if(!QDir(dirPath).exists())
     {
-        aka::PrintError("Directory path(" + path + ") not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError("Directory path(" + path + ") not exists.", KAkaInvalidPath);
         return false;
     }
 
     if(QDir(dirPath + name).exists())
     {
-        aka::PrintError("Directory already exists.", KAkaFileAlreadyExists);
+        KernelManager::GetKernelManager()->PrintError("Directory already exists.", KAkaFileAlreadyExists);
         return false;
     }
 
@@ -157,14 +157,14 @@ bool AkaFileSystem::DeleteDir(QString path)
     // 禁止删除根目录
     if(path == "/")
     {
-        aka::PrintError("Invalid directory path \"/\".", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError("Invalid directory path \"/\".", KAkaInvalidPath);
         return false;
     }
 
     QString fullPath = RootDirPath_ + path;
     if(!QFile(fullPath).exists())
     {
-        aka::PrintError("Directory data file not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError("Directory data file not exists.", KAkaInvalidPath);
         return false;
     }
 
@@ -267,13 +267,13 @@ void AkaFileSystem::Initialize()
         {
             RootDirectory_->AddSubFolder(file.fileName());
             if(aka::KAkaDebugOutput)
-                aka::Print("[Initializing FileSystem]: Detected /" + file.fileName());
+                KernelManager::GetKernelManager()->Print("[Initializing FileSystem]: Detected /" + file.fileName());
         }
         else if(file.suffix() == "dat")
         {
             RootDirectory_->AddSubFolder(file.fileName());
             if(aka::KAkaDebugOutput)
-                aka::Print("[Initializing FileSystem]: Detected /" + file.fileName());
+                KernelManager::GetKernelManager()->Print("[Initializing FileSystem]: Detected /" + file.fileName());
         }
     }
 }

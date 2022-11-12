@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <QTextBlock>
 #include "aka_global.h"
+#include "Terminal/terminal_manager.h"
+#include "Kernel/kernel_manager.h"
 
 #include <QDebug>
 #include <QThread>
@@ -38,11 +40,10 @@ void MainWindow::Init()
 
     // 强制英文输入法
     LoadKeyboardLayout((LPCWSTR)QString("0x0409").utf16(), KLF_ACTIVATE);
-}
 
-AkaPlainTextEdit *MainWindow::GetMainPlainTextEdit()
-{
-    return this->ui->MainInputArea;
+    // 初始化所有管理器
+    TerminalManager::GetTerminalManager()->Init(ui->MainInputArea);
+    KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()

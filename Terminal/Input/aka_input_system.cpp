@@ -3,6 +3,7 @@
 #include "Terminal/Info/aka_commands.h"
 #include "Kernel/ExceptionSystem/aka_status_code.h"
 #include "aka_global.h"
+#include "Terminal/terminal_manager.h"
 
 #include <QDebug>
 
@@ -55,7 +56,7 @@ QStringList AkaInputSystem::SplitLine(QString line)
     // 引号是否成对出现
     if(hit)
     {
-        aka::PrintError("Missing quotes or quotes are not pairs.", KAkaMissingQuote);
+        TerminalManager::GetTerminalManager()->PrintError("Missing quotes or quotes are not pairs.", KAkaMissingQuote);
         return QStringList();
     }
 
@@ -78,7 +79,7 @@ int AkaInputSystem::Execute(QStringList args)
                 if(cmds.second == nullptr)
                 {
                     // 绑定命令的函数不存在(为null)或者绑定出错
-                    aka::PrintError("Command bind null func.", KAkaInvlidCmdFunc);
+                    TerminalManager::GetTerminalManager()->PrintError("Command bind null func.", KAkaInvlidCmdFunc);
                     return 1;
                 }
                 return (*cmds.second)(args);
@@ -87,7 +88,7 @@ int AkaInputSystem::Execute(QStringList args)
     }
 
     // 未找到命令
-    aka::PrintError("Commands Not Found.", KAkaCmdNotFound);
+    TerminalManager::GetTerminalManager()->PrintError("Commands Not Found.", KAkaCmdNotFound);
     return 1;
 }
 

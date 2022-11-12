@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "Terminal/UI/aka_plain_text_edit.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,9 +16,6 @@ public:
 
     // 初始化主窗口
     void Init();
-
-    // 获取只要编辑区域控件实例
-    AkaPlainTextEdit* GetMainPlainTextEdit();
 
 private:
     int CursorLine_ = -1;
