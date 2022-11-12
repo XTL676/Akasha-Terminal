@@ -5,8 +5,9 @@
 
 class AkaFileSystem
 {
+    friend class KernelManager;
+
 public:
-    static AkaFileSystem* GetFileSystem();
     const QString GetRootDirPath();
     Directory* GetRootDirectory();
 
@@ -25,7 +26,6 @@ public:
     // TODO 删除文件
 
 private:
-    static AkaFileSystem* Instance_;
     QString RootDirPath_;
     Directory* RootDirectory_;
 

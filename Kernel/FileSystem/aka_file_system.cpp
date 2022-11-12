@@ -7,17 +7,8 @@
 #include "directory.h"
 #include "file.h"
 #include "Kernel/ExceptionSystem/aka_status_code.h"
+#include "Kernel/kernel_manager.h"
 #include "aka_global.h"
-
-// 初始化静态成员
-AkaFileSystem *AkaFileSystem::Instance_ = nullptr;
-
-AkaFileSystem *AkaFileSystem::GetFileSystem()
-{
-    if(Instance_ == nullptr)
-        Instance_ = new AkaFileSystem();
-    return Instance_;
-}
 
 const QString AkaFileSystem::GetRootDirPath()
 {
@@ -137,7 +128,7 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
     if(path == "/")
     {
         ParentFolderName = "/";
-        AkaFileSystem::GetFileSystem()->GetRootDirectory()->AddSubFolder(name);
+        KernelManager::GetKernelManager()->GetFileSystem()->GetRootDirectory()->AddSubFolder(name);
     }
     else
     {
@@ -152,7 +143,7 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
         GenFileData(&dir, RootDirPath_ + "/" + dirPath_s.join("/"));
     }
     Directory dir(ParentFolderName, name, "SYSTEM");
-    AkaFileSystem::GetFileSystem()->GenFileData(&dir, RootDirPath_ + "/" + path);
+    KernelManager::GetKernelManager()->GetFileSystem()->GenFileData(&dir, RootDirPath_ + "/" + path);
     return true;
 }
 
@@ -184,7 +175,7 @@ bool AkaFileSystem::DeleteDir(QString path)
     if(list.isEmpty())
     {
         // 删除记录
-        AkaFileSystem::GetFileSystem()->GetRootDirectory()->RemoveSubFolder(deleteDirName);
+        KernelManager::GetKernelManager()->GetFileSystem()->GetRootDirectory()->RemoveSubFolder(deleteDirName);
         // 删除文件夹
         QDir(fullPath).removeRecursively();
         // 删除.dir文件
@@ -262,8 +253,6 @@ bool AkaFileSystem::CreateFileA(QString path, QString name, QString suffix, QStr
 
 void AkaFileSystem::Initialize()
 {
-    if(Instance_ != nullptr) return;
-
     RootDirPath_ = QCoreApplication::applicationDirPath() + "/" +
                 aka::KAkaDataFolderName + "/" +
                 aka::KAkaFileSystemRootFolderName;

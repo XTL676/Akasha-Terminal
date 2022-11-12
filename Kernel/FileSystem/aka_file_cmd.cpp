@@ -1,6 +1,6 @@
 #include "aka_file_cmd.h"
 #include "Kernel/ExceptionSystem/aka_status_code.h"
-#include "aka_file_system.h"
+#include "Kernel/kernel_manager.h"
 #include "aka_global.h"
 #include <QFile>
 
@@ -21,7 +21,7 @@ int AkaFileCmd::mkdir(QStringList args)
     list.removeAll("");
     QString name = list.back();
     list.pop_back();
-    if(AkaFileSystem::GetFileSystem()->CreateDir("/" + list.join("/"), name))
+    if(KernelManager::GetKernelManager()->GetFileSystem()->CreateDir("/" + list.join("/"), name))
         aka::Print("Create directory \"" + name + "\" successfully.(" + args[1] + ")", QColor("green"));
 
     return 1;
@@ -50,7 +50,7 @@ int AkaFileCmd::rm(QStringList args)
         // 删除文件夹
         QString dirPath = args[2];
         if(!args[2].startsWith("/")) dirPath = "/" + dirPath; // 如果不以/开头，则默认删除根目录下的文件夹
-        if(AkaFileSystem::GetFileSystem()->DeleteDir(dirPath))
+        if(KernelManager::GetKernelManager()->GetFileSystem()->DeleteDir(dirPath))
             aka::Print("Delete directory (" + dirPath + ") successfully.", QColor("green"));
     }
     else
@@ -94,7 +94,7 @@ int AkaFileCmd::mkf(QStringList args)
     QString path = "/" + t_list1.join("/");
 
     // 创建文件.dat
-    if(AkaFileSystem::GetFileSystem()->CreateFileA(path, name, suffix, content))
+    if(KernelManager::GetKernelManager()->GetFileSystem()->CreateFileA(path, name, suffix, content))
         aka::Print("Create directory \"" + fileFullName + "\" successfully.(" + args[1] + ")", QColor("green"));
 
     return true;

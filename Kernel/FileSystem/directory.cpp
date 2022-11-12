@@ -1,5 +1,4 @@
 #include "directory.h"
-#include "Kernel/FileSystem/file.h"
 
 QDataStream &operator<<(QDataStream &output , const Directory &dataInfo)
 {

@@ -5,11 +5,7 @@
 
 class AkaExceptionSystem
 {
-public:
-    static AkaExceptionSystem* GetExceptionSystem();
-
-private:
-    static AkaExceptionSystem* Instance_;
+    friend class KernelManager;
 
 private:
     AkaExceptionSystem();

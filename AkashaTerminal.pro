@@ -17,6 +17,7 @@ SOURCES += \
     Kernel/FileSystem/directory.cpp \
     Kernel/FileSystem/file.cpp \
     Kernel/abstract_kernel_system.cpp \
+    Kernel/kernel_manager.cpp \
     Terminal/Input/aka_input_system.cpp \
     Terminal/Display/aka_display_cmd.cpp \
     Terminal/UI/aka_plain_text_edit.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     Kernel/FileSystem/directory.h \
     Kernel/FileSystem/file.h \
     Kernel/abstract_kernel_system.h \
+    Kernel/kernel_manager.h \
     Terminal/Display/aka_display_cmd.h \
     Terminal/Info/aka_commands.h \
     Terminal/Input/aka_input_system.h \
