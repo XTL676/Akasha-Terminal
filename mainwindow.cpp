@@ -46,22 +46,21 @@ void MainWindow::Init()
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 
     // TEST
-//    KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir("/abc");
-//    qDebug() << KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDir()->GetSubFolderNames();
+    KernelManager::GetKernelManager()->GetFileSystem()->List("/");
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()
 {
-    // 如果下一次光标位置不为读取光标位置的下面，则设置只读
-    QTextCursor tc = ui->MainInputArea->textCursor();
-    int current_line = tc.blockNumber();
-    int nCurpos = tc.position() - tc.block().position(); // 当前光标在本行内的相对位置
-    // 并禁止删除头显示(如：root@Akasha:~$)
-    if(current_line >= CursorLine_ && nCurpos >= ui->MainInputArea->GetConsoleHead().length())
-    {
-        ui->MainInputArea->setReadOnly(false);
-        CursorLine_ = current_line;
-    }
-    else
-        ui->MainInputArea->setReadOnly(true);
+//    // 如果下一次光标位置不为读取光标位置的后面，则设置只读
+//    QTextCursor tc = ui->MainInputArea->textCursor();
+//    int current_line = tc.blockNumber();
+//    int nCurpos = tc.position() - tc.block().position(); // 当前光标在本行内的相对位置
+//    // 并禁止删除头显示(如：root@Akasha:~$)
+//    if(current_line >= CursorLine_ && nCurpos >= ui->MainInputArea->GetConsoleHead().length())
+//    {
+//        ui->MainInputArea->setReadOnly(false);
+//        CursorLine_ = current_line;
+//    }
+//    else
+//        ui->MainInputArea->setReadOnly(true);
 }

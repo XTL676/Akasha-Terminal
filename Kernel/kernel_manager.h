@@ -11,7 +11,9 @@ public:
     void Init(QPlainTextEdit* MainEditArea);
 
     void Print(QString msg);
+    void Print(QString msg, bool newline);
     void Print(QString msg, QColor color);
+    void Print(QString msg, QColor color, bool newline);
     void PrintError(QString msg, int code);
 
     QPlainTextEdit* GetMainEditArea();

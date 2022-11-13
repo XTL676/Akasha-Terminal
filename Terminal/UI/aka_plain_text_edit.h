@@ -21,7 +21,7 @@ public:
 
 protected:
     // 事件过滤器
-    bool eventFilter(QObject *target, QEvent *event);
+    bool eventFilter(QObject *target, QEvent *event) override;
 
     // 回车事件
     void EnterEvent();

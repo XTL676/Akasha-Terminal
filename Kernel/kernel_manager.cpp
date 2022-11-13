@@ -1,4 +1,5 @@
 #include "kernel_manager.h"
+#include <QStringBuilder>
 
 KernelManager* KernelManager::Instance_ = nullptr;
 
@@ -21,10 +22,29 @@ void KernelManager::Init(QPlainTextEdit* MainEditArea)
 
 void KernelManager::Print(QString msg)
 {
+    Print(msg, true);
+}
+
+void KernelManager::Print(QString msg, bool newline)
+{
+    if(!newline)
+    {
+        // 移动光标到行首
+        QTextCursor tc = MainEditArea_->textCursor();
+        tc.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, msg.length());
+        MainEditArea_->setTextCursor(tc);
+        // 删除前面一个字符
+        MainEditArea_->textCursor().deletePreviousChar();
+    }
     MainEditArea_->appendPlainText(msg);
 }
 
 void KernelManager::Print(QString msg, QColor color)
+{
+    Print(msg, color, true);
+}
+
+void KernelManager::Print(QString msg, QColor color, bool newline)
 {
     // 保存原来的样式
     QTextCharFormat fmt = MainEditArea_->currentCharFormat();
@@ -35,6 +55,15 @@ void KernelManager::Print(QString msg, QColor color)
     MainEditArea_->mergeCurrentCharFormat(fmt);
     // 输出
     MainEditArea_->appendPlainText(msg);
+    if(!newline)
+    {
+        // 移动光标到行首
+        QTextCursor tc = MainEditArea_->textCursor();
+        tc.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, msg.length());
+        MainEditArea_->setTextCursor(tc);
+        // 删除前面一个字符
+        MainEditArea_->textCursor().deletePreviousChar();
+    }
     // 还原样式
     fmt.setForeground(cb);
     MainEditArea_->mergeCurrentCharFormat(fmt);

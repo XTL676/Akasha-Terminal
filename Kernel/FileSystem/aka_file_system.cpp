@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QDataStream>
-#include <QDataStream>
+#include <QStringBuilder>
 #include "Terminal/UI/aka_plain_text_edit.h"
 #include "directory.h"
 #include "file.h"
@@ -358,6 +358,82 @@ bool AkaFileSystem::ChangeDir(QString path)
     return true;
 }
 
+/// 列出某文件夹下的所有文件夹和文件
+/// \brief AkaFileSystem::List
+/// \param path 哪个文件夹下
+/// \return 是否成功
+///
+bool AkaFileSystem::List(QString path)
+{
+    aka::PathReplace(path);
+
+    if(path == "/")
+    {
+        QStringList dirs = RootDirectory_->GetSubFolderNames();
+        QStringList files = RootDirectory_->GetSubFileNames();
+
+        int col = aka::KAkaLSDefaultDisplayColumn; // 不能小于3
+        // 输出
+        int col_t = 0;
+        QString str;
+
+        // 输出文件夹
+        for (int i = 0; i < dirs.length(); i++) {
+            if(col_t != 0 && col_t%col == 0)
+            {
+                KernelManager::GetKernelManager()->Print(str, aka::KAkaFolderDefaultDisplayColor);
+                str = "";
+                col_t = 0;
+            }
+            str = str % dirs[i] % "   ";
+            col_t++;
+        }
+        if(!str.isEmpty())
+        {
+            QStringList l = str.split("   ");
+            l.removeAll("");
+            KernelManager::GetKernelManager()->Print(l.join("   "), aka::KAkaFolderDefaultDisplayColor);
+        }
+        str = "";
+        int col_ = col_t;
+
+        // 输出文件
+        for (int i = 0; i < files.length(); i++) {
+            if(col_t != 0 && col_t%col == 0)
+            {
+                KernelManager::GetKernelManager()->Print(str);
+                str = "";
+                col_t = 0;
+            }
+            str = str % files[i] % "   ";
+            col_t++;
+        }
+        if(!str.isEmpty())
+        {
+            QStringList l = str.split("   ");
+            l.removeAll("");
+            KernelManager::GetKernelManager()->Print(l.join("   "));
+        }
+
+        if(col_ != 0 && col_ != col && dirs.length() >= 1 && files.length() >= 1)
+        {
+            // 移动光标到行首
+            QTextCursor tc = KernelManager::GetKernelManager()->GetMainEditArea()->textCursor();
+            tc.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, files.join("   ").length());
+            KernelManager::GetKernelManager()->GetMainEditArea()->setTextCursor(tc);
+            // 删除前面一个字符
+            KernelManager::GetKernelManager()->GetMainEditArea()->textCursor().deletePreviousChar();
+
+
+            KernelManager::GetKernelManager()->GetMainEditArea()->insertPlainText("   ");
+        }
+
+        // 光标移到最末尾
+        KernelManager::GetKernelManager()->GetMainEditArea()->moveCursor(QTextCursor::End);
+    }
+    return true;
+}
+
 void AkaFileSystem::Initialize()
 {
     RootDirPath_ = QCoreApplication::applicationDirPath() + "/" +
@@ -369,20 +445,24 @@ void AkaFileSystem::Initialize()
     CurrentDirectory_ = RootDirectory_;
 
     // 读取根目录
-    for(auto file:QDir(RootDirPath_).entryInfoList())
+    for(QFileInfo file:QDir(RootDirPath_).entryInfoList())
     {
+        if(file.isDir()) continue;
         QString name = file.baseName();
+        QString suffix = file.suffix();
         QStringList list = file.fileName().split(".");
         list.removeAll("");
+
         if(list.length() > 1)
         {
+            suffix = list.back();
             list.pop_back();
             name = list.join(".");
         }
 
-        if(file.suffix() == "dir")
+        if(suffix == "dir")
             RootDirectory_->AddSubFolder(name);
-        else if(file.suffix() == "dat")
+        else if(suffix == "dat")
             RootDirectory_->AddSubFile(name);
     }
 }

@@ -34,6 +34,8 @@ public:
 
     // 更换目录
     bool ChangeDir(QString path);
+    // 列出某文件夹下的所有文件夹和文件
+    bool List(QString path);
 
 private:
     QString RootDirPath_; // 包含程序目录路径
