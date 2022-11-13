@@ -16,8 +16,9 @@ namespace aka {
     //const QFont KAkaInputDefaultFont = QFont("Teyvat", 15);
 
     const QChar KAkaConselSymbol = '$';
+    const QString KAkaConselName = "@Akasha:";
     const QString KAkaConselDefaultPath = "/";
-    const QString KAkaConselDefaultHead = QString("root@Akasha:") + KAkaConselDefaultPath + KAkaConselSymbol;
+    const QString KAkaConselDefaultUser = "root";
 
     const QString KAkaDataFolderName = "data";
     const QString KAkaFileSystemRootFolderName = "files";

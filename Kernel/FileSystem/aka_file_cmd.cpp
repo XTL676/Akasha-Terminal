@@ -113,5 +113,52 @@ int AkaFileCmd::mkf(QStringList args)
     if(KernelManager::GetKernelManager()->GetFileSystem()->CreateFileA(path, name, suffix, content))
         KernelManager::GetKernelManager()->Print("Create directory \"" + fileFullName + "\" successfully.(" + args[1] + ")", QColor("green"));
 
-    return true;
+    return 1;
+}
+
+int AkaFileCmd::cd(QStringList args)
+{
+    if(args.length() < 2)
+    {
+        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [cd path]", KAkaMissingParameter);
+        return 1;
+    }
+    else if(args.length() > 2)
+    {
+        KernelManager::GetKernelManager()->PrintError("Too many parameters.There should only be one path.", KAkaTooManyParameters);
+        return 1;
+    }
+
+    // 只有.. ，返回上级目录
+    if(args[1] == "..")
+    {
+        QString path;
+        QStringList list = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath().split("/");
+
+        if(list.length() == 2)
+            path = "/";
+        else
+        {
+            list.removeAll("");
+            list.pop_back();
+            path = list.join("/");
+        }
+
+        KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir(path);
+        return 1;
+    }
+
+    // 以"/"开头，完整路径
+    if(args[1].startsWith("/"))
+    {
+        KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir(args[1]);
+        return 1;
+    }
+    else
+    {
+        // 无"/"开头，当前路径
+        QString path = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath() + "/" + args[1];
+        KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir(path);
+        return 1;
+    }
 }

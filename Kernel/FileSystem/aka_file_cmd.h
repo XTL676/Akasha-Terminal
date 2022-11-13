@@ -11,7 +11,8 @@ public:
     static int rm(QStringList args);
     // 创建文件
     static int mkf(QStringList args);
-    // TODO 更换当前路径(进入目录)
+    // 更换当前路径(进入目录)
+    static int cd(QStringList args);
 };
 
 #endif // AKAFILECMD_H

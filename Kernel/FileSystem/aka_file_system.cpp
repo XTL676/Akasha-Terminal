@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QDataStream>
 #include <QDataStream>
+#include "Terminal/UI/aka_plain_text_edit.h"
 #include "directory.h"
 #include "file.h"
 #include "Kernel/ExceptionSystem/aka_status_code.h"
@@ -327,6 +328,18 @@ bool AkaFileSystem::DeleteFileA(QString fullPath)
 ///
 bool AkaFileSystem::ChangeDir(QString path)
 {
+    if(path == "/")
+    {
+        CurrentPath_ = "/";
+        CurrentDirectory_ = RootDirectory_;
+        // 设置输出接口的头显示
+        ((AkaPlainTextEdit*)KernelManager::GetKernelManager()->GetMainEditArea())
+                ->SetConsoleHead(aka::KAkaConselDefaultUser, "/");
+        return true;
+    }
+
+    aka::PathReplace(path);
+
     // 去除path末尾的"/"
     QStringList list = path.split("/");
     list.removeAll("");
@@ -337,6 +350,10 @@ bool AkaFileSystem::ChangeDir(QString path)
 
     CurrentPath_ = "/" + list.join("/");
     CurrentDirectory_ = dir;
+
+    // 设置输出接口的头显示
+    ((AkaPlainTextEdit*)KernelManager::GetKernelManager()->GetMainEditArea())
+            ->SetConsoleHead(aka::KAkaConselDefaultUser, CurrentPath_);
 
     return true;
 }

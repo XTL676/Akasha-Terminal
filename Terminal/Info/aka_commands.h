@@ -16,7 +16,7 @@ typedef const QMap<const QList<QString>, builtin_func> builtin_cmd_map;
  */
 static const builtin_cmd_map KBuiltin_Cmds =
 {
-    {{"cd", "Change directory.[cd path]"},nullptr},
+    {{"cd", "Change directory.[cd path]"},&AkaFileCmd::cd},
     {{"help", "List all available commands."},&AkaBasicCmd::help},
     {{"exit", "ex", "e", "Exit Akasha Terminal."},&AkaBasicCmd::exit},
     {{"ls", "List all files and dirs on current path."},nullptr},

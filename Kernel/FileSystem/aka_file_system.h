@@ -36,7 +36,7 @@ public:
     bool ChangeDir(QString path);
 
 private:
-    QString RootDirPath_;
+    QString RootDirPath_; // 包含程序目录路径
     Directory* RootDirectory_ = nullptr;
     QString CurrentPath_ = aka::KAkaConselDefaultPath;
     Directory* CurrentDirectory_ = nullptr; // 当前所在文件夹的文件夹对象(父级文件夹对象)

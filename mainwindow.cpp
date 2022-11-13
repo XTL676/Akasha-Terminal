@@ -36,7 +36,7 @@ void MainWindow::Init()
     connect(ui->MainInputArea, SIGNAL(cursorPositionChanged()), SLOT(on_MainInputArea_cursorPositionChanged()));
 
     // TODO 默认头显示
-    ui->MainInputArea->appendPlainText(aka::KAkaConselDefaultHead);
+    ui->MainInputArea->appendPlainText(ui->MainInputArea->GetConsoleHead());
 
     // 强制英文输入法
     LoadKeyboardLayout((LPCWSTR)QString("0x0409").utf16(), KLF_ACTIVATE);
@@ -57,7 +57,7 @@ void MainWindow::on_MainInputArea_cursorPositionChanged()
     int current_line = tc.blockNumber();
     int nCurpos = tc.position() - tc.block().position(); // 当前光标在本行内的相对位置
     // 并禁止删除头显示(如：root@Akasha:~$)
-    if(current_line >= CursorLine_ && nCurpos >= QString(aka::KAkaConselDefaultHead).length())
+    if(current_line >= CursorLine_ && nCurpos >= ui->MainInputArea->GetConsoleHead().length())
     {
         ui->MainInputArea->setReadOnly(false);
         CursorLine_ = current_line;

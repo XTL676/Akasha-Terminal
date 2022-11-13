@@ -15,6 +15,18 @@ void AkaPlainTextEdit::Init()
 {
     // 设置完后自动调用其eventFilter函数
     installEventFilter(this);
+
+    ConsoleHead_ = aka::KAkaConselDefaultUser + aka::KAkaConselName + aka::KAkaConselDefaultPath + aka::KAkaConselSymbol;
+}
+
+const QString AkaPlainTextEdit::GetConsoleHead()
+{
+    return ConsoleHead_;
+}
+
+void AkaPlainTextEdit::SetConsoleHead(QString user, QString path)
+{
+    ConsoleHead_ = user + aka::KAkaConselName + path + aka::KAkaConselSymbol;
 }
 
 void AkaPlainTextEdit::EnterEvent()
@@ -36,7 +48,7 @@ void AkaPlainTextEdit::EnterEvent()
         qApp->exit(status); // 关闭程序
 
     // 下一次头显示
-    appendPlainText(aka::KAkaConselDefaultHead);
+    appendPlainText(ConsoleHead_);
     // 将光标移到末尾
     tc.movePosition(QTextCursor::End);
     setTextCursor(tc);
@@ -63,7 +75,7 @@ bool AkaPlainTextEdit::eventFilter(QObject *target, QEvent *event)
             // 回车事件(禁止删除头显示(如：root@Akasha:~$))
             QTextCursor tc = textCursor();
             int nCurpos = tc.position() - tc.block().position(); // 当前光标在本行内的相对位置
-            if(nCurpos <= aka::KAkaConselDefaultHead.length())
+            if(nCurpos <= ConsoleHead_.length())
                 return true;
         }
     }
