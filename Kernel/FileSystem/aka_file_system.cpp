@@ -191,9 +191,9 @@ bool AkaFileSystem::DeleteDir(QString path)
     }
 
     QString fullPath = RootDirPath_ + path;
-    if(!QFile(fullPath).exists())
+    if(!QFile(fullPath + ".dir").exists())
     {
-        KernelManager::GetKernelManager()->PrintError("Directory data file not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError("Directory not exists.", KAkaInvalidPath);
         return false;
     }
 
@@ -278,6 +278,12 @@ bool AkaFileSystem::CreateFileA(QString path, QString name, QString suffix, QStr
 ///
 bool AkaFileSystem::DeleteFileA(QString fullPath)
 {
+    if(!QFile(RootDirPath_ + fullPath + ".dat").exists())
+    {
+        KernelManager::GetKernelManager()->PrintError("File not exists.", KAkaInvalidPath);
+        return false;
+    }
+
     QStringList list = fullPath.split("/");
     list.removeAll("");
     QString fullName = list.back();

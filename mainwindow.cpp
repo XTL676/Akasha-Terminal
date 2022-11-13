@@ -44,9 +44,6 @@ void MainWindow::Init()
     // 初始化所有管理器
     TerminalManager::GetTerminalManager()->Init(this, ui->MainInputArea);
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
-
-    // TEST
-    KernelManager::GetKernelManager()->GetFileSystem()->DeleteFileA("/abc/io.i");
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()

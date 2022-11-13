@@ -41,17 +41,20 @@ int AkaFileCmd::rm(QStringList args)
         return 1;
     }
 
+    QString path = args[2];
+    if(!args[2].startsWith("/")) path = "/" + path; // 如果不以/开头，则默认删除根目录下的文件夹或文件
+
     if(args[1] == "-f")
     {
-        // TODO 删除文件
+        // 删除文件
+        if(KernelManager::GetKernelManager()->GetFileSystem()->DeleteFileA(path))
+            KernelManager::GetKernelManager()->Print("Delete directory (" + path + ") successfully.", QColor("green"));
     }
     else if(args[1] == "-d")
     {
         // 删除文件夹
-        QString dirPath = args[2];
-        if(!args[2].startsWith("/")) dirPath = "/" + dirPath; // 如果不以/开头，则默认删除根目录下的文件夹
-        if(KernelManager::GetKernelManager()->GetFileSystem()->DeleteDir(dirPath))
-            KernelManager::GetKernelManager()->Print("Delete directory (" + dirPath + ") successfully.", QColor("green"));
+        if(KernelManager::GetKernelManager()->GetFileSystem()->DeleteDir(path))
+            KernelManager::GetKernelManager()->Print("Delete directory (" + path + ") successfully.", QColor("green"));
     }
     else
         KernelManager::GetKernelManager()->PrintError("Invalid parameter.Should be -f for file or -d for dir.", KAkaInvalidParameter);
