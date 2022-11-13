@@ -21,21 +21,6 @@ namespace aka {
     const QString KAkaDataFolderName = "data";
     const QString KAkaFileSystemRootFolderName = "files";
 
-    // 获取主窗口实例
-    static QMainWindow* GetMainWindow()
-    {
-        static QMainWindow * mainwindow=nullptr;
-        if(mainwindow)
-           return mainwindow;
-        for(const auto& it:qApp->topLevelWidgets())
-        {
-            mainwindow=qobject_cast<QMainWindow *>(it);
-            if(mainwindow)
-               return mainwindow;
-        }
-        return nullptr;
-    }
-
     // 判断字符串是否为纯数字
     static bool StringIsNumber(QString &qstrSrc)
     {

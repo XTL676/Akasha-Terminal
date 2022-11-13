@@ -9,10 +9,13 @@ TerminalManager *TerminalManager::GetTerminalManager()
     return Instance_;
 }
 
-void TerminalManager::Init(QPlainTextEdit *MainEditArea)
+void TerminalManager::Init(QMainWindow* MainWindow, QPlainTextEdit *MainEditArea)
 {
     // 初始化所有受管理的系统
     GetInputSystem();
+
+    // 设置主窗口接口
+    MainWindow_ = MainWindow;
 
     // 设置输出接口
     MainEditArea_ = MainEditArea;
@@ -47,6 +50,11 @@ void TerminalManager::PrintError(QString msg, int code)
 QPlainTextEdit *TerminalManager::GetMainEditArea()
 {
     return MainEditArea_;
+}
+
+QMainWindow *TerminalManager::GetMainWindow()
+{
+    return MainWindow_;
 }
 
 AkaInputSystem *TerminalManager::GetInputSystem()

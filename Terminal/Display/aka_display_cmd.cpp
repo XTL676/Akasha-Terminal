@@ -26,10 +26,10 @@ int AkaDisplayCmd::resize(QStringList args)
         return 1;
     }
 
-    aka::GetMainWindow()->resize(width, height);
+    TerminalManager::GetTerminalManager()->GetMainWindow()->resize(width, height);
     TerminalManager::GetTerminalManager()->Print("The window size is set to " +
-               QString::number(aka::GetMainWindow()->width()) + "*" +
-               QString::number(aka::GetMainWindow()->height()) + " successfully.", QColor("green"));
+               QString::number(TerminalManager::GetTerminalManager()->GetMainWindow()->width()) + "*" +
+               QString::number(TerminalManager::GetTerminalManager()->GetMainWindow()->height()) + " successfully.", QColor("green"));
     return 1;
 }
 

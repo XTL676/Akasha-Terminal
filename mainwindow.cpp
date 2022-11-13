@@ -42,7 +42,7 @@ void MainWindow::Init()
     LoadKeyboardLayout((LPCWSTR)QString("0x0409").utf16(), KLF_ACTIVATE);
 
     // 初始化所有管理器
-    TerminalManager::GetTerminalManager()->Init(ui->MainInputArea);
+    TerminalManager::GetTerminalManager()->Init(this, ui->MainInputArea);
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 }
 
