@@ -36,7 +36,7 @@ void MainWindow::Init()
     connect(ui->MainInputArea, SIGNAL(cursorPositionChanged()), SLOT(on_MainInputArea_cursorPositionChanged()));
 
     // TODO 默认头显示
-    ui->MainInputArea->appendPlainText("root@Akasha:~$");
+    ui->MainInputArea->appendPlainText(aka::KAkaConselDefaultHead);
 
     // 强制英文输入法
     LoadKeyboardLayout((LPCWSTR)QString("0x0409").utf16(), KLF_ACTIVATE);
@@ -44,6 +44,10 @@ void MainWindow::Init()
     // 初始化所有管理器
     TerminalManager::GetTerminalManager()->Init(this, ui->MainInputArea);
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
+
+    // TEST
+//    KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir("/abc");
+//    qDebug() << KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDir()->GetSubFolderNames();
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()

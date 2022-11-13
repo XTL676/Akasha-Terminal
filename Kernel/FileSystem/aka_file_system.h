@@ -2,6 +2,7 @@
 #define AKAFILESYSTEM_H
 #include <QString>
 #include "Kernel/abstract_kernel_system.h"
+#include "aka_global.h"
 #include "directory.h"
 #include "file.h"
 
@@ -12,13 +13,14 @@ class AkaFileSystem : public AbstractKernelSystem
 public:
     const QString GetRootDirPath();
     Directory* GetRootDirectory();
+    const QString GetCurrentDirPath();
+    Directory* GetCurrentDir();
 
-    // 将文件和文件夹以一种形式保存到程序目录下
-    bool Save();
     // 检测数据文件夹是否在当前程序目录下
     bool DetectDataFolder();
+
     // 加载文件夹(.dir文件)
-    Directory LoadDir(QString dirPath);
+    Directory* LoadDir(QString dirPath);
     // 加载文件(.dat文件)
     File LoadFile(QString filePath);
     // 创建文件夹
@@ -30,16 +32,21 @@ public:
     // 删除文件
     bool DeleteFileA(QString fullPath);
 
+    // 更换目录
+    bool ChangeDir(QString path);
+
 private:
     QString RootDirPath_;
-    Directory* RootDirectory_;
+    Directory* RootDirectory_ = nullptr;
+    QString CurrentPath_ = aka::KAkaConselDefaultPath;
+    Directory* CurrentDirectory_ = nullptr; // 当前所在文件夹的文件夹对象(父级文件夹对象)
 
+private:
     // 生成数据文件(文件和文件夹的序列化)
     void GenFileData(BaseFile* file, QString path);
     // 初始化此系统
     void Initialize();
 
-private:
     AkaFileSystem();
     ~AkaFileSystem();
 };

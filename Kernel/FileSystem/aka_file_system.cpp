@@ -20,8 +20,14 @@ Directory *AkaFileSystem::GetRootDirectory()
     return RootDirectory_;
 }
 
-bool AkaFileSystem::Save()
+const QString AkaFileSystem::GetCurrentDirPath()
 {
+    return CurrentPath_;
+}
+
+Directory *AkaFileSystem::GetCurrentDir()
+{
+    return CurrentDirectory_;
 }
 
 bool AkaFileSystem::DetectDataFolder()
@@ -41,30 +47,29 @@ bool AkaFileSystem::DetectDataFolder()
 /// \param dirPath 要加载的文件夹的路径(以"/"开头)
 /// \return 文件夹对象
 ///
-Directory AkaFileSystem::LoadDir(QString dirPath)
+Directory *AkaFileSystem::LoadDir(QString dirPath)
 {
-    if(dirPath == "/") return *RootDirectory_;
+    if(dirPath == "/") return RootDirectory_;
 
     QString fullPath = RootDirPath_ + dirPath + ".dir";
     aka::PathReplace(fullPath);
 
-    Directory inDir;
-
     QFile dir(fullPath);
     if(!dir.exists())
     {
-        KernelManager::GetKernelManager()->PrintError("Directory data file not exists.", KAkaInvalidPath);
-        return inDir;
+        KernelManager::GetKernelManager()->PrintError("Directory not exists.", KAkaInvalidPath);
+        return nullptr;
     }
 
     // 读取.dir文件
+    Directory inDir;
     QFile f(fullPath);
     f.open(QIODevice::ReadOnly);
     // 反序列化
     QDataStream in(&f);
     in >> inDir;
     f.close();
-    return inDir;
+    return new Directory(inDir);
 }
 
 /// 加载文件夹(读取.dat)
@@ -165,7 +170,7 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
         dirPath_s.removeAll("");
         ParentFolderName = dirPath_s.back();
         // 获取父类的.dir文件
-        Directory dir = LoadDir("/" + dirPath_s.join("/"));
+        Directory dir = *LoadDir("/" + dirPath_s.join("/"));
         dir.AddSubFolder(name);
         // 刷新父类的.dir文件
         dirPath_s.pop_back();
@@ -217,7 +222,7 @@ bool AkaFileSystem::DeleteDir(QString path)
     QString parentDirAtPath = "/" + list.join("/"); // 父级目录所在的目录路径
 
     // 反序列化父级文件夹
-    Directory dir = LoadDir(parentDirAtPath + "/" + parentDirName);
+    Directory dir = *LoadDir(parentDirAtPath + "/" + parentDirName);
 
     dir.RemoveSubFolder(deleteDirName);
     GenFileData(&dir, RootDirPath_ + parentDirAtPath);
@@ -255,7 +260,7 @@ bool AkaFileSystem::CreateFileA(QString path, QString name, QString suffix, QStr
     QString ParentDirAtPath = "/" + list.join("/");
 
     // 反序列化父级文件夹
-    Directory dir = LoadDir(ParentDirAtPath + "/" + ParentDirName);
+    Directory dir = *LoadDir(ParentDirAtPath + "/" + ParentDirName);
 
     // 向父级文件夹添加记录
     if(!suffix.isEmpty())
@@ -303,7 +308,7 @@ bool AkaFileSystem::DeleteFileA(QString fullPath)
         QString parentDirAtPath = list.join("/");
 
         // 删除记录
-        Directory dirObj = LoadDir(parentDirPath);
+        Directory dirObj = *LoadDir(parentDirPath);
         dirObj.RemoveSubFile(fullName);
         GenFileData(&dirObj, RootDirPath_ + parentDirAtPath);
     }
@@ -311,6 +316,27 @@ bool AkaFileSystem::DeleteFileA(QString fullPath)
     // 删除文件
     QFile f(RootDirPath_ + parentDirPath + "/" + fullName + ".dat");
     f.remove();
+
+    return true;
+}
+
+/// 更换目录
+/// \brief AkaFileSystem::ChangeDir
+/// \param path 要切换的目录路径("/")
+/// \return
+///
+bool AkaFileSystem::ChangeDir(QString path)
+{
+    // 去除path末尾的"/"
+    QStringList list = path.split("/");
+    list.removeAll("");
+
+    Directory* dir = LoadDir("/" + list.join("/"));
+    if(dir == nullptr)
+        return false;
+
+    CurrentPath_ = "/" + list.join("/");
+    CurrentDirectory_ = dir;
 
     return true;
 }
@@ -323,6 +349,7 @@ void AkaFileSystem::Initialize()
 
     // 设置根文件夹("/")对象
     RootDirectory_ = new Directory("", "/", "SYSTEM");
+    CurrentDirectory_ = RootDirectory_;
 
     // 读取根目录
     for(auto file:QDir(RootDirPath_).entryInfoList())
