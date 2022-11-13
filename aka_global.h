@@ -26,6 +26,7 @@ namespace aka {
 
     const QString KAkaDataFolderName = "data";
     const QString KAkaFileSystemRootFolderName = "files";
+    const QString KAkaTempFolderName = "tmp";
 
     // 判断字符串是否为纯数字
     static bool StringIsNumber(QString &qstrSrc)

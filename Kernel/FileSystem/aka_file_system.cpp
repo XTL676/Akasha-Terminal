@@ -116,7 +116,8 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
         outputDatFullPath += !fileObj->GetSuffix().isEmpty() ? "." + fileObj->GetSuffix() + ".dat" : ".dat";
         // 序列化File对象
         QFile f(outputDatFullPath);
-        f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
+        if(f.exists()) f.remove();
+        f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
         QDataStream out(&f);
         out << *fileObj;
         f.close();
@@ -128,7 +129,8 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
         Directory* dirObj = (Directory*)file;
         // 序列化Directory对象
         QFile f(outputDatFullPath);
-        f.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text);
+        if(f.exists()) f.remove();
+        f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
         QDataStream out(&f);
         out << *dirObj;
         f.close();

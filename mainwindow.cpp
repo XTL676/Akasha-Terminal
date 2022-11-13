@@ -46,7 +46,9 @@ void MainWindow::Init()
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 
     // TEST
-//    KernelManager::GetKernelManager()->GetFileSystem()->List("/");
+    bool b;
+    Directory dir = KernelManager::GetKernelManager()->GetFileSystem()->LoadDir("/fff", b);
+    qDebug() << b << " " << dir.GetName();
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()
