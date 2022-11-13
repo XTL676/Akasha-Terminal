@@ -20,7 +20,7 @@ public:
     bool DetectDataFolder();
 
     // 加载文件夹(.dir文件)
-    Directory* LoadDir(QString dirPath);
+    Directory LoadDir(QString dirPath, bool &success);
     // 加载文件(.dat文件)
     File LoadFile(QString filePath);
     // 创建文件夹

@@ -3,6 +3,7 @@
 #include "Kernel/kernel_manager.h"
 #include "aka_global.h"
 #include <QFile>
+#include <QThread>
 
 int AkaFileCmd::mkdir(QStringList args)
 {
@@ -28,6 +29,7 @@ int AkaFileCmd::mkdir(QStringList args)
     if(KernelManager::GetKernelManager()->GetFileSystem()->CreateDir(CurrentDirPath + list.join("/"), name))
         KernelManager::GetKernelManager()->Print("Create directory \"" + name + "\" successfully.(" + args[1] + ")", QColor("green"));
 
+    QThread::msleep(500);
     return 1;
 }
 
@@ -117,6 +119,7 @@ int AkaFileCmd::mkf(QStringList args)
     if(KernelManager::GetKernelManager()->GetFileSystem()->CreateFileA(path, name, suffix, content))
         KernelManager::GetKernelManager()->Print("Create directory \"" + fileFullName + "\" successfully.(" + args[1] + ")", QColor("green"));
 
+    QThread::msleep(500);
     return 1;
 }
 

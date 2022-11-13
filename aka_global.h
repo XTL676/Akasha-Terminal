@@ -20,6 +20,7 @@ namespace aka {
     const QString KAkaConselDefaultPath = "/";
     const QString KAkaConselDefaultUser = "root";
 
+    const QString KAkaLSSplitSymbol = "   ";
     const int KAkaLSDefaultDisplayColumn = 5; // 不能小于3
     const QColor KAkaFolderDefaultDisplayColor = QColor("blue");
 

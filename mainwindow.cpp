@@ -46,7 +46,7 @@ void MainWindow::Init()
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 
     // TEST
-//    KernelManager::GetKernelManager()->GetFileSystem()->List("/abc");
+//    KernelManager::GetKernelManager()->GetFileSystem()->List("/");
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()

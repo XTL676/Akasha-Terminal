@@ -48,9 +48,9 @@ bool AkaFileSystem::DetectDataFolder()
 /// \param dirPath 要加载的文件夹的路径(以"/"开头)
 /// \return 文件夹对象
 ///
-Directory *AkaFileSystem::LoadDir(QString dirPath)
+Directory AkaFileSystem::LoadDir(QString dirPath, bool &success)
 {
-    if(dirPath == "/") return RootDirectory_;
+    if(dirPath == "/") return *RootDirectory_;
 
     QString fullPath = RootDirPath_ + dirPath + ".dir";
     aka::PathReplace(fullPath);
@@ -59,7 +59,8 @@ Directory *AkaFileSystem::LoadDir(QString dirPath)
     if(!dir.exists())
     {
         KernelManager::GetKernelManager()->PrintError("Directory not exists.", KAkaInvalidPath);
-        return nullptr;
+        success = false;
+        return Directory();
     }
 
     // 读取.dir文件
@@ -70,7 +71,9 @@ Directory *AkaFileSystem::LoadDir(QString dirPath)
     QDataStream in(&f);
     in >> inDir;
     f.close();
-    return new Directory(inDir);
+
+    success = true;
+    return inDir;
 }
 
 /// 加载文件夹(读取.dat)
@@ -171,7 +174,8 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
         dirPath_s.removeAll("");
         ParentFolderName = dirPath_s.back();
         // 获取父类的.dir文件
-        Directory dir = *LoadDir("/" + dirPath_s.join("/"));
+        bool b;
+        Directory dir = LoadDir("/" + dirPath_s.join("/"), b);
         dir.AddSubFolder(name);
         // 刷新父类的.dir文件
         dirPath_s.pop_back();
@@ -223,7 +227,8 @@ bool AkaFileSystem::DeleteDir(QString path)
     QString parentDirAtPath = "/" + list.join("/"); // 父级目录所在的目录路径
 
     // 反序列化父级文件夹
-    Directory dir = *LoadDir(parentDirAtPath + "/" + parentDirName);
+    bool b;
+    Directory dir = LoadDir(parentDirAtPath + "/" + parentDirName, b);
 
     dir.RemoveSubFolder(deleteDirName);
     GenFileData(&dir, RootDirPath_ + parentDirAtPath);
@@ -261,7 +266,9 @@ bool AkaFileSystem::CreateFileA(QString path, QString name, QString suffix, QStr
     QString ParentDirAtPath = "/" + list.join("/");
 
     // 反序列化父级文件夹
-    Directory dir = *LoadDir(ParentDirAtPath + "/" + ParentDirName);
+    bool b;
+    Directory dir = LoadDir(ParentDirAtPath + "/" + ParentDirName, b);
+    if(!b) return false;
 
     // 向父级文件夹添加记录
     if(!suffix.isEmpty())
@@ -309,7 +316,8 @@ bool AkaFileSystem::DeleteFileA(QString fullPath)
         QString parentDirAtPath = list.join("/");
 
         // 删除记录
-        Directory dirObj = *LoadDir(parentDirPath);
+        bool b;
+        Directory dirObj = LoadDir(parentDirPath, b);
         dirObj.RemoveSubFile(fullName);
         GenFileData(&dirObj, RootDirPath_ + parentDirAtPath);
     }
@@ -344,12 +352,12 @@ bool AkaFileSystem::ChangeDir(QString path)
     QStringList list = path.split("/");
     list.removeAll("");
 
-    Directory* dir = LoadDir("/" + list.join("/"));
-    if(dir == nullptr)
-        return false;
+    bool b;
+    Directory dir = LoadDir("/" + list.join("/"), b);
+    if(!b) return false;
 
     CurrentPath_ = "/" + list.join("/");
-    CurrentDirectory_ = dir;
+    CurrentDirectory_ = &dir;
 
     // 设置输出接口的头显示
     ((AkaPlainTextEdit*)KernelManager::GetKernelManager()->GetMainEditArea())
@@ -380,11 +388,12 @@ bool AkaFileSystem::List(QString path)
         // 其它目录
         QStringList l = path.split("/");
         l.removeAll("");
-        Directory* dir = LoadDir("/" + l.join("/"));
-        if(dir == nullptr) return false;
+        bool b;
+        Directory dir = LoadDir("/" + l.join("/"), b);
+        if(!b) return false;
 
-        dirs = dir->GetSubFolderNames();
-        files = dir->GetSubFileNames();
+        dirs = dir.GetSubFolderNames();
+        files = dir.GetSubFileNames();
     }
 
     int col = aka::KAkaLSDefaultDisplayColumn; // 不能小于3
@@ -400,47 +409,48 @@ bool AkaFileSystem::List(QString path)
             str = "";
             col_t = 0;
         }
-        str = str % dirs[i] % "   ";
+        str = str % dirs[i] % aka::KAkaLSSplitSymbol;
         col_t++;
     }
     if(!str.isEmpty())
     {
-        QStringList l = str.split("   ");
+        QStringList l = str.split(aka::KAkaLSSplitSymbol);
         l.removeAll("");
-        KernelManager::GetKernelManager()->Print(l.join("   "), aka::KAkaFolderDefaultDisplayColor);
+        KernelManager::GetKernelManager()->Print(l.join(aka::KAkaLSSplitSymbol), aka::KAkaFolderDefaultDisplayColor);
     }
     str = "";
-    int col_ = col_t;
+    int col_ = col_t; // 有几个文件夹是在多出来一行里的
 
     // 输出文件
+    int row = 0; // 有几行包含了文件
     for (int i = 0; i < files.length(); i++) {
         if(col_t != 0 && col_t%col == 0)
         {
             KernelManager::GetKernelManager()->Print(str);
             str = "";
             col_t = 0;
+            row++;
         }
-        str = str % files[i] % "   ";
+        str = str % files[i] % aka::KAkaLSSplitSymbol;
         col_t++;
     }
     if(!str.isEmpty())
     {
-        QStringList l = str.split("   ");
+        QStringList l = str.split(aka::KAkaLSSplitSymbol);
         l.removeAll("");
-        KernelManager::GetKernelManager()->Print(l.join("   "));
+        KernelManager::GetKernelManager()->Print(l.join(aka::KAkaLSSplitSymbol));
     }
 
-    if(col_ != 0 && col_ != col && dirs.length() >= 1 && files.length() >= 1)
+    if(col_ != 0 && dirs.length() >= 1 && files.length() >= 1)
     {
         // 移动光标到行首
         QTextCursor tc = KernelManager::GetKernelManager()->GetMainEditArea()->textCursor();
-        tc.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, files.join("   ").length());
+        tc.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, files.join(aka::KAkaLSSplitSymbol).length() + row);
         KernelManager::GetKernelManager()->GetMainEditArea()->setTextCursor(tc);
         // 删除前面一个字符
         KernelManager::GetKernelManager()->GetMainEditArea()->textCursor().deletePreviousChar();
 
-
-        KernelManager::GetKernelManager()->GetMainEditArea()->insertPlainText("   ");
+        KernelManager::GetKernelManager()->GetMainEditArea()->insertPlainText(aka::KAkaLSSplitSymbol);
 
         // 光标移到最末尾
         KernelManager::GetKernelManager()->GetMainEditArea()->moveCursor(QTextCursor::End);
