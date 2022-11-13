@@ -13,6 +13,8 @@ public:
     static int mkf(QStringList args);
     // 更换当前路径(进入目录)
     static int cd(QStringList args);
+    // 列出目录下的所有文件和文件夹
+    static int ls(QStringList args);
 };
 
 #endif // AKAFILECMD_H

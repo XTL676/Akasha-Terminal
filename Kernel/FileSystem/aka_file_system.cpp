@@ -441,11 +441,10 @@ bool AkaFileSystem::List(QString path)
 
 
         KernelManager::GetKernelManager()->GetMainEditArea()->insertPlainText("   ");
+
+        // 光标移到最末尾
+        KernelManager::GetKernelManager()->GetMainEditArea()->moveCursor(QTextCursor::End);
     }
-
-    // 光标移到最末尾
-    KernelManager::GetKernelManager()->GetMainEditArea()->moveCursor(QTextCursor::End);
-
     return true;
 }
 

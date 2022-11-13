@@ -19,7 +19,7 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"cd", "Change directory.[cd path]"},&AkaFileCmd::cd},
     {{"help", "List all available commands."},&AkaBasicCmd::help},
     {{"exit", "ex", "e", "Exit Akasha Terminal."},&AkaBasicCmd::exit},
-    {{"ls", "List all files and dirs on current path."},nullptr},
+    {{"ls", "List all files and dirs on current path.[ls path]"},&AkaFileCmd::ls},
     {{"resize", "Resize window.[resize width height]"},&AkaDisplayCmd::resize},
     {{"refont", "Set font.[refont (size) (fontname)]"},&AkaDisplayCmd::refont},
     {{"mkdir", "md", "Create directory.[mkdir path]"},&AkaFileCmd::mkdir},
