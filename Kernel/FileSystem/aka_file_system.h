@@ -3,6 +3,7 @@
 #include <QString>
 #include "Kernel/abstract_kernel_system.h"
 #include "directory.h"
+#include "file.h"
 
 class AkaFileSystem : public AbstractKernelSystem
 {
@@ -16,15 +17,18 @@ public:
     bool Save();
     // 检测数据文件夹是否在当前程序目录下
     bool DetectDataFolder();
-    // 加载文件夹
+    // 加载文件夹(.dir文件)
     Directory LoadDir(QString dirPath);
+    // 加载文件(.dat文件)
+    File LoadFile(QString filePath);
     // 创建文件夹
     bool CreateDir(QString path, QString name);
     // 删除文件夹
     bool DeleteDir(QString path);
     // 创建文件
     bool CreateFileA(QString path, QString name, QString suffix, QString content);
-    // TODO 删除文件
+    // 删除文件
+    bool DeleteFileA(QString fullPath);
 
 private:
     QString RootDirPath_;
