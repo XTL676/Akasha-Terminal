@@ -48,7 +48,9 @@ int AkaFileCmd::rm(QStringList args)
     }
 
     QString path = args[2];
-    if(!args[2].startsWith("/")) path = "/" + path; // 如果不以/开头，则默认删除根目录下的文件夹或文件
+    QString CurrentDirPath = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath();
+    CurrentDirPath = CurrentDirPath.endsWith("/") ? CurrentDirPath : CurrentDirPath + "/";
+    if(!args[2].startsWith("/")) path = CurrentDirPath + path; // 如果不以/开头，则默认删除当前目录下的文件夹或文件
 
     if(args[1] == "-f")
     {
@@ -113,7 +115,9 @@ int AkaFileCmd::mkf(QStringList args)
     }
 
     t_list1.pop_back();
-    path = "/" + t_list1.join("/");
+    QString CurrentDirPath = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath();
+        CurrentDirPath = CurrentDirPath.endsWith("/") ? CurrentDirPath : CurrentDirPath + "/";
+    path = CurrentDirPath + t_list1.join("/");
 
     // 创建文件.dat
     if(KernelManager::GetKernelManager()->GetFileSystem()->CreateFileA(path, name, suffix, content))
