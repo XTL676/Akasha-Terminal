@@ -21,7 +21,11 @@ int AkaFileCmd::mkdir(QStringList args)
     list.removeAll("");
     QString name = list.back();
     list.pop_back();
-    if(KernelManager::GetKernelManager()->GetFileSystem()->CreateDir("/" + list.join("/"), name))
+
+    QString CurrentDirPath = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath();
+    CurrentDirPath = CurrentDirPath.endsWith("/") ? CurrentDirPath : CurrentDirPath + "/";
+
+    if(KernelManager::GetKernelManager()->GetFileSystem()->CreateDir(CurrentDirPath + list.join("/"), name))
         KernelManager::GetKernelManager()->Print("Create directory \"" + name + "\" successfully.(" + args[1] + ")", QColor("green"));
 
     return 1;
