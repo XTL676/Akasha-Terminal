@@ -4,16 +4,16 @@
 
 class Directory: public BaseFile
 {
-    // 重载序列化
-    friend QDataStream &operator<<(QDataStream &output , const Directory &dataInfo);
-    // 重载反序列化
-    friend QDataStream &operator>>(QDataStream &input , Directory &dataInfo);
-
 private:
     QStringList SubFolderNames_; // 文件夹所包含的文件夹
     QStringList SubFileNames_; // 文件夹所包含的文件
 
 public:
+    // 序列化
+    void Serialize(QTextStream& out);
+    // 反序列化
+    void Deserialize(QTextStream& in);
+
     // 获取文件夹所包含的文件夹
     const QStringList GetSubFolderNames();
     // 获取文件夹所包含的文件

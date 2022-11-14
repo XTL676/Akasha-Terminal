@@ -68,15 +68,16 @@ Directory AkaFileSystem::LoadDir(QString dirPath, bool &success)
     QFile f(fullPath);
     f.open(QIODevice::ReadOnly);
     // 反序列化
-    QDataStream in(&f);
-    in >> inDir;
+    QTextStream in(&f);
+//    in >> inDir;
+    inDir.Deserialize(in);
     f.close();
 
     success = true;
     return inDir;
 }
 
-/// 加载文件夹(读取.dat)
+/// 加载文件(读取.dat)
 /// \brief AkaFileSystem::LoadFile
 /// \param filePath 要加载的文件的路径(以"/"开头)
 /// \return 文件对象
@@ -100,6 +101,7 @@ File AkaFileSystem::LoadFile(QString filePath)
     f.open(QIODevice::ReadOnly);
     // 反序列化
     QDataStream in(&f);
+    in.setVersion(6);
     in >> inFile;
     f.close();
     return inFile;
@@ -119,6 +121,7 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
         if(f.exists()) f.remove();
         f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
         QDataStream out(&f);
+        out.setVersion(6);
         out << *fileObj;
         f.close();
     }
@@ -131,8 +134,9 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
         QFile f(outputDatFullPath);
         if(f.exists()) f.remove();
         f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
-        QDataStream out(&f);
-        out << *dirObj;
+        QTextStream out(&f);
+//        out << *dirObj;
+        dirObj->Serialize(out);
         f.close();
     }
 }

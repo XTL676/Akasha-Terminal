@@ -26,7 +26,9 @@ namespace aka {
 
     const QString KAkaDataFolderName = "data";
     const QString KAkaFileSystemRootFolderName = "files";
-    const QString KAkaTempFolderName = "tmp";
+
+    // 文件或文件夹命名禁止使用符号
+    const QStringList KAkaFDNameForbiddenSymbols = {"<", ">", "/", "\\", "*", "?", "\"", "|", ":"};
 
     // 判断字符串是否为纯数字
     static bool StringIsNumber(QString &qstrSrc)

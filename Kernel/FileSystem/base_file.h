@@ -18,6 +18,12 @@ public:
     virtual bool IsChildClass() = 0;
     // 获取名称
     const QString GetName();
+    // 获取所有者
+    const QString GetOwner();
+    // 获取创建日期
+    const QDateTime GetCreateDateTime();
+    // 获取修改日期
+    const QDateTime GetModifyDateTime();
     // 获取父级文件夹名称
     const QString GetParentFolderName();
 };

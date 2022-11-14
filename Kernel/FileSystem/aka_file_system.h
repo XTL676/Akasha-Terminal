@@ -43,7 +43,7 @@ private:
     QString CurrentPath_ = aka::KAkaConselDefaultPath;
     Directory* CurrentDirectory_ = nullptr; // 当前所在文件夹的文件夹对象(父级文件夹对象)
 
-private:
+public:
     // 生成数据文件(文件和文件夹的序列化)
     void GenFileData(BaseFile* file, QString path);
     // 初始化此系统
