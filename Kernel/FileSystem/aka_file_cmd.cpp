@@ -20,6 +20,16 @@ int AkaFileCmd::mkdir(QStringList args)
     QStringList list = args[1].split("/");
     list.removeAll("");
     QString name = list.back();
+    // 判断名称是否含有禁词
+    for(QString s:aka::KAkaFDNameForbiddenSymbols)
+    {
+        if(name.contains(s))
+        {
+            KernelManager::GetKernelManager()->PrintError("Directory name can't be any of \"" +
+                                                          aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
+            return 1;
+        }
+    }
     list.pop_back();
 
     QString CurrentDirPath = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath();
@@ -110,6 +120,17 @@ int AkaFileCmd::mkf(QStringList args)
 
         t_list2.pop_back();
         name = t_list2.join(".");
+    }
+
+    // 判断名称是否含有禁词
+    for(QString s:aka::KAkaFDNameForbiddenSymbols)
+    {
+        if(name.contains(s))
+        {
+            KernelManager::GetKernelManager()->PrintError("File name can't be any of \"" +
+                                                          aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
+            return 1;
+        }
     }
 
     t_list1.pop_back();

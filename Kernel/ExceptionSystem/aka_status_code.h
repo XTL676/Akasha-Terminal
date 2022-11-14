@@ -12,4 +12,5 @@ const int KAkaBrokenDataFolder = 0x110;
 const int KAkaInvalidPath = 0x106;
 const int KAkaFileAlreadyExists = 0x107;
 const int KAkaInvalidParameter = 0x108;
+const int KAkaInvalidName = 0x109;
 #endif // AKA_STATUS_CODE_H
