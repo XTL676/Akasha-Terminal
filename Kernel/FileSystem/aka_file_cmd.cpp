@@ -177,19 +177,9 @@ int AkaFileCmd::cd(QStringList args)
         return 1;
     }
 
-    // 以"/"开头，完整路径
-    if(args[1].startsWith("/"))
-    {
-        KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir(args[1]);
-        return 1;
-    }
-    else
-    {
-        // 无"/"开头，当前路径
-        QString path = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath() + "/" + args[1];
-        KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir(path);
-        return 1;
-    }
+    KernelManager::GetKernelManager()->GetFileSystem()->ChangeDir(MakeFullPath(args[1]));
+
+    return 1;
 }
 
 int AkaFileCmd::ls(QStringList args)
@@ -226,20 +216,44 @@ int AkaFileCmd::ls(QStringList args)
         KernelManager::GetKernelManager()->GetFileSystem()->List(path);
         return 1;
     }
-
-    // 以"/"开头，完整路径
-    if(args[1].startsWith("/"))
-    {
-        KernelManager::GetKernelManager()->GetFileSystem()->List(args[1]);
-        return 1;
-    }
-    else
-    {
-        // 无"/"开头，当前路径
-        QString path = KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath() + "/" + args[1];
-        KernelManager::GetKernelManager()->GetFileSystem()->List(path);
-        return 1;
-    }
+    KernelManager::GetKernelManager()->GetFileSystem()->List(MakeFullPath(args[1]));
 
     return true;
+}
+
+int AkaFileCmd::cp(QStringList args)
+{
+    if(args.length() < 3)
+    {
+        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [cp frompath topath]", KAkaMissingParameter);
+        return 1;
+    }
+
+    else if(args.length() > 3)
+    {
+        KernelManager::GetKernelManager()->PrintError("Too many parameters.", KAkaTooManyParameters);
+        return 1;
+    }
+
+    if(KernelManager::GetKernelManager()->GetFileSystem()->Copy(MakeFullPath(args[1]), MakeFullPath(args[2])))
+    {
+        QString arg1 = args[1], arg2 = args[2];
+        aka::PathReplace(arg1);
+        aka::PathReplace(arg2);
+        KernelManager::GetKernelManager()->Print(
+                    "Copy " + arg1 + " to " + arg2 + " successfully.", QColor("green"));
+        return 1;
+    }
+
+    return 1;
+}
+
+QString AkaFileCmd::MakeFullPath(QString shortPath)
+{
+    // 以"/"开头，完整路径
+    if(shortPath.startsWith("/"))
+        return shortPath;
+    else
+        // 无"/"开头，当前路径
+        return KernelManager::GetKernelManager()->GetFileSystem()->GetCurrentDirPath() + "/" + shortPath;
 }

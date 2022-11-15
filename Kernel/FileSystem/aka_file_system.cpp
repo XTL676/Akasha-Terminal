@@ -517,6 +517,11 @@ bool AkaFileSystem::Copy(QString from, QString to)
                     from_file.SetName(l.join("."));
                 }
             }
+            else
+            {
+                from_file.SetName(GetParentDirNameFromPath(to));
+                from_file.SetSuffix("");
+            }
 
             QString fileName = from_file.GetSuffix().isEmpty() ?
                         from_file.GetName() : from_file.GetName() + "." + from_file.GetSuffix();
@@ -535,7 +540,7 @@ bool AkaFileSystem::Copy(QString from, QString to)
                 from_file.SetParentFolderName("/");
 
                 // 向父级文件夹添加记录
-                RootDirectory_->AddSubFolder(fileName);
+                RootDirectory_->AddSubFile(fileName);
             }
             else
             {

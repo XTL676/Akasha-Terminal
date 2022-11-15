@@ -15,6 +15,12 @@ public:
     static int cd(QStringList args);
     // 列出目录下的所有文件和文件夹
     static int ls(QStringList args);
+    // 拷贝文件或文件夹
+    static int cp(QStringList args);
+
+private:
+    // 将缺省转化为全路径（绝对路径）
+    static QString MakeFullPath(QString shortPath);
 };
 
 #endif // AKAFILECMD_H
