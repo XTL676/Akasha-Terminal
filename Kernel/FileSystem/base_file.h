@@ -26,6 +26,11 @@ public:
     const QDateTime GetModifyDateTime();
     // 获取父级文件夹名称
     const QString GetParentFolderName();
+
+    // 设置名称
+    void SetName(QString name);
+    // 设置父级文件夹名称
+    void SetParentFolderName(QString name);
 };
 
 #endif // BASEFILE_H

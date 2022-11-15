@@ -29,6 +29,11 @@ QString File::GetSuffix()
     return Suffix_;
 }
 
+void File::SetSuffix(QString suffix)
+{
+    Suffix_ = suffix;
+}
+
 bool File::IsChildClass()
 {
     return true;

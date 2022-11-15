@@ -82,7 +82,7 @@ Directory AkaFileSystem::LoadDir(QString dirPath, bool &success)
 /// \param filePath 要加载的文件的路径(以"/"开头)
 /// \return 文件对象
 ///
-File AkaFileSystem::LoadFile(QString filePath)
+File AkaFileSystem::LoadFile(QString filePath, bool &success)
 {
     QString fullPath = RootDirPath_ + filePath + ".dat";
     aka::PathReplace(fullPath);
@@ -93,6 +93,7 @@ File AkaFileSystem::LoadFile(QString filePath)
     if(!file.exists())
     {
         KernelManager::GetKernelManager()->PrintError("File data not exists.", KAkaInvalidPath);
+        success = false;
         return inFile;
     }
 
@@ -104,6 +105,8 @@ File AkaFileSystem::LoadFile(QString filePath)
     in.setVersion(6);
     in >> inFile;
     f.close();
+
+    success = true;
     return inFile;
 }
 
@@ -335,6 +338,225 @@ bool AkaFileSystem::DeleteFileA(QString fullPath)
     return true;
 }
 
+/// 拷贝文件或者文件夹
+/// \brief AkaFileSystem::Copy
+/// \param from 从哪个路径("/")
+/// \param to   到哪个路径("/")
+/// \return 是否成功拷贝
+///
+bool AkaFileSystem::Copy(QString from, QString to)
+{
+    /**
+     * to为拷贝到哪个路径，
+     *      如果以/结尾，则是拷贝到目录下；(/from/dir1, /to/ ---> /to/dir1)
+     *      否则将其命名后拷贝到最近一个目录下(/from/dir1, /to ---> /to)
+     */
+    if(from == "/")
+    {
+        KernelManager::GetKernelManager()->PrintError("Root dir can't copy.", KAkaInvalidPath);
+        return false;
+    }
+
+    // 判断是文件还是文件夹
+    // 只要路径后缀不带"/"的一律认为是文件反之亦然
+    if(from.endsWith("/"))
+    {
+        // 文件夹
+        bool success;
+        Directory from_dir = LoadDir(from.mid(0, from.length()-1), success);
+        if(!success) return false;
+
+        // 是否重命名文件
+        if(to.endsWith("/"))
+        {
+            // 拷贝到目标目录下
+
+            // 检测目标路径是否已经存在同名文件夹
+            if(QFile(RootDirPath_ + to + from_dir.GetName() + ".dir").exists())
+            {
+                // TODO 询问是否覆盖
+                KernelManager::GetKernelManager()->PrintError("Directory already exists.", KAkaFileAlreadyExists);
+                return false;
+            }
+
+
+            if(to == "/")
+            {
+                // 重设父级文件夹名称
+                from_dir.SetParentFolderName("/");
+
+                // 向父级文件夹添加记录
+                RootDirectory_->AddSubFolder(from_dir.GetName());
+            }
+            else
+            {
+                // 重设父级文件夹名称
+                from_dir.SetParentFolderName(GetParentDirNameFromPath(to));
+
+                // 向目标文件夹添加记录
+                Directory to_dir = LoadDir(to.mid(0, to.length()-1), success);
+                if(!success) return false;
+
+                to_dir.AddSubFolder(from_dir.GetName());
+                GenFileData(&to_dir, RootDirPath_ + GetParentDirAtPath(to));
+            }
+
+            // 创建记录
+            GenFileData(&from_dir, RootDirPath_ + to);
+            // 拷贝物理文件夹
+            CopyPhysicalDir(RootDirPath_ + from.mid(0, from.length()-1), RootDirPath_ + to + from_dir.GetName(), true);
+        }
+        else
+        {
+            // 命名后拷
+            from_dir.SetName(GetParentDirNameFromPath(to));
+
+            // 检测目标路径是否已经存在同名文件夹
+            if(QFile(RootDirPath_ + GetParentDirAtPath(to) + "/" + from_dir.GetName() + ".dir").exists())
+            {
+                // TODO 询问是否覆盖
+                KernelManager::GetKernelManager()->PrintError("Directory already exists.", KAkaFileAlreadyExists);
+                return false;
+            }
+
+            if(to == "/" || GetParentDirAtPath(to) == "/")
+            {
+                // 重设父级文件夹名称
+                from_dir.SetParentFolderName("/");
+
+                // 向父级文件夹添加记录
+                RootDirectory_->AddSubFolder(from_dir.GetName());
+            }
+            else
+            {
+                // 重设父级文件夹名称
+                from_dir.SetParentFolderName(GetParentDirNameFromPath(GetParentDirAtPath(to)));
+
+                // 向目标文件夹添加记录
+                Directory to_dir = LoadDir(GetParentDirAtPath(to), success);
+                if(!success) return false;
+
+                to_dir.AddSubFolder(from_dir.GetName());
+                GenFileData(&to_dir, RootDirPath_ + GetParentDirAtPath(GetParentDirAtPath(to)));
+            }
+
+            // 创建记录
+            GenFileData(&from_dir, RootDirPath_ + GetParentDirAtPath(to));
+            // 拷贝物理文件夹
+            CopyPhysicalDir(RootDirPath_ + from.mid(0, from.length()-1),
+                            RootDirPath_ + GetParentDirAtPath(to) + "/" + from_dir.GetName(), true);
+        }
+    }
+    else
+    {
+        // 文件
+        bool success;
+        File from_file = LoadFile(from, success);
+        if(!success) return false;
+
+        if(to.endsWith("/"))
+        {
+            // 拷贝到目标目录下
+            QString fileName = from_file.GetSuffix().isEmpty() ?
+                        from_file.GetName() : from_file.GetName() + "." + from_file.GetSuffix();
+
+            // 检测目标路径是否已经存在同名文件夹
+            if(QFile(RootDirPath_ + to + fileName + ".dat").exists())
+            {
+                // TODO 询问是否覆盖
+                KernelManager::GetKernelManager()->PrintError("File already exists.", KAkaFileAlreadyExists);
+                return false;
+            }
+
+            if(to == "/")
+            {
+                // 重设父级文件夹名称
+                from_file.SetParentFolderName("/");
+
+                // 向父级文件夹添加记录
+                RootDirectory_->AddSubFile(fileName);
+            }
+            else
+            {
+                // 重设父级文件夹名称
+                from_file.SetParentFolderName(GetParentDirNameFromPath(to));
+
+                // 向目标文件夹添加记录
+                Directory to_dir = LoadDir(to.mid(0, to.length()-1), success);
+                if(!success) return false;
+
+                to_dir.AddSubFile(fileName);
+                GenFileData(&to_dir, RootDirPath_ + GetParentDirAtPath(to));
+            }
+
+            // 创建记录
+            GenFileData(&from_file, RootDirPath_ + to);
+        }
+        else
+        {
+            // 命名后拷
+            if(GetParentDirNameFromPath(to).contains("."))
+            {
+                QStringList l = GetParentDirNameFromPath(to).split(".");
+                l.removeAll("");
+                if(l.length() == 2)
+                {
+                    from_file.SetName(l.front());
+                    from_file.SetSuffix(l.back());
+                }
+                else
+                {
+                    // 如果文件以"."开头，则是一个没有名字只有后缀的文件
+                    if(GetParentDirNameFromPath(to).startsWith("."))
+                    {
+                        from_file.SetName("");
+                        from_file.SetSuffix(GetParentDirNameFromPath(to));
+                    }
+                    from_file.SetSuffix(l.back());
+                    l.pop_back();
+                    from_file.SetName(l.join("."));
+                }
+            }
+
+            QString fileName = from_file.GetSuffix().isEmpty() ?
+                        from_file.GetName() : from_file.GetName() + "." + from_file.GetSuffix();
+
+            // 检测目标路径是否已经存在同名文件夹
+            if(QFile(RootDirPath_ + GetParentDirAtPath(to) + "/" + fileName + ".dat").exists())
+            {
+                // TODO 询问是否覆盖
+                KernelManager::GetKernelManager()->PrintError("File already exists.", KAkaFileAlreadyExists);
+                return false;
+            }
+
+            if(to == "/" || GetParentDirAtPath(to) == "/")
+            {
+                // 重设父级文件夹名称
+                from_file.SetParentFolderName("/");
+
+                // 向父级文件夹添加记录
+                RootDirectory_->AddSubFolder(fileName);
+            }
+            else
+            {
+                // 重设父级文件夹名称
+                from_file.SetParentFolderName(GetParentDirNameFromPath(GetParentDirAtPath(to)));
+
+                // 向目标文件夹添加记录
+                Directory to_dir = LoadDir(GetParentDirAtPath(to), success);
+                if(!success) return false;
+
+                to_dir.AddSubFile(fileName);
+                GenFileData(&to_dir, RootDirPath_ + GetParentDirAtPath(GetParentDirAtPath(to)));
+            }
+
+            // 创建记录
+            GenFileData(&from_file, RootDirPath_ + GetParentDirAtPath(to));
+        }
+    }
+    return true;
+}
+
 /// 更换目录
 /// \brief AkaFileSystem::ChangeDir
 /// \param path 要切换的目录路径("/")
@@ -460,6 +682,71 @@ bool AkaFileSystem::List(QString path)
 
         // 光标移到最末尾
         KernelManager::GetKernelManager()->GetMainEditArea()->moveCursor(QTextCursor::End);
+    }
+    return true;
+}
+
+QString AkaFileSystem::GetParentDirNameFromPath(QString path)
+{
+    aka::PathReplace(path);
+    if(path == "/") return path;
+    QStringList list = path.split("/");
+    list.removeAll("");
+    return list.back();
+}
+
+QString AkaFileSystem::GetParentDirAtPath(QString path)
+{
+    aka::PathReplace(path);
+    if(path == "/") return path;
+    QStringList list = path.split("/");
+    list.removeAll("");
+    // 根目录
+    if(list.length() == 1) return "/";
+    list.pop_back();
+    return "/" + list.join("/");
+}
+
+/// 拷贝物理文件夹
+/// \brief AkaFileSystem::CopyPhysicalDir
+/// \param fromDir 从哪个文件夹路径
+/// \param toDir 目标文件夹路径
+/// \param coverFileIfExist 当允许覆盖操作时，将旧文件进行删除操作
+/// \return
+///
+bool AkaFileSystem::CopyPhysicalDir(const QString &fromDir, const QString &toDir, bool coverFileIfExist)
+{
+    QDir sourceDir(fromDir);
+    QDir targetDir(toDir);
+    if(!targetDir.exists())
+    {
+        // 如果目标目录不存在，则进行创建
+        if(!targetDir.mkdir(targetDir.absolutePath()))
+            return false;
+    }
+
+    QFileInfoList fileInfoList = sourceDir.entryInfoList();
+    foreach(QFileInfo fileInfo, fileInfoList)
+    {
+        if(fileInfo.fileName() == "." || fileInfo.fileName() == "..")
+            continue;
+
+        if(fileInfo.isDir())
+        {
+            // 当为目录时，递归的进行copy
+            if(!CopyPhysicalDir(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName()), coverFileIfExist))
+                return false;
+        }
+        else
+        {
+            // 当允许覆盖操作时，将旧文件进行删除操作
+            if(coverFileIfExist && targetDir.exists(fileInfo.fileName()))
+                targetDir.remove(fileInfo.fileName());
+
+            // 进行文件copy
+            if(!QFile::copy(fileInfo.filePath(), targetDir.filePath(fileInfo.fileName())))
+                return false;
+        }
     }
     return true;
 }

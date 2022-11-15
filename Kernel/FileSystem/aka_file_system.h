@@ -22,7 +22,7 @@ public:
     // 加载文件夹(.dir文件)
     Directory LoadDir(QString dirPath, bool &success);
     // 加载文件(.dat文件)
-    File LoadFile(QString filePath);
+    File LoadFile(QString filePath, bool& success);
     // 创建文件夹
     bool CreateDir(QString path, QString name);
     // 删除文件夹
@@ -31,6 +31,8 @@ public:
     bool CreateFileA(QString path, QString name, QString suffix, QString content);
     // 删除文件
     bool DeleteFileA(QString fullPath);
+    // 拷贝文件或文件夹
+    bool Copy(QString from, QString to);
 
     // 更换目录
     bool ChangeDir(QString path);
@@ -44,6 +46,13 @@ private:
     Directory* CurrentDirectory_ = nullptr; // 当前所在文件夹的文件夹对象(父级文件夹对象)
 
 public:
+    // 通过路径获取父级文件夹名称
+    QString GetParentDirNameFromPath(QString path);
+    // 通过路径获取父级文件夹所在的路径
+    QString GetParentDirAtPath(QString path);
+    // 拷贝物理文件夹
+    bool CopyPhysicalDir(const QString &fromDir, const QString &toDir, bool coverFileIfExist);
+
     // 生成数据文件(文件和文件夹的序列化)
     void GenFileData(BaseFile* file, QString path);
     // 初始化此系统

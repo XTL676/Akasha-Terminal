@@ -15,7 +15,11 @@ private:
     QString Content_; // 文件内容
 
 public:
+    // 获取后缀名
     QString GetSuffix();
+
+    // 设置后缀名
+    void SetSuffix(QString suffix);
 
     bool IsChildClass() override;
 

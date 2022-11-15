@@ -46,23 +46,8 @@ void MainWindow::Init()
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 
     // TEST
-//    QStringList fileNames{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-//    Directory* dir = new Directory("/", "abc", "TESTER");
-//    for(auto n:fileNames)
-//        dir->AddSubFile(n);
-//    KernelManager::GetKernelManager()->GetFileSystem()->GenFileData(dir, KernelManager::GetKernelManager()->GetFileSystem()->GetRootDirPath());
-//    delete dir;
-
-//    bool b;
-//    Directory dir_;
-//    dir_ = KernelManager::GetKernelManager()->GetFileSystem()->LoadDir("/abc",b);
-//    qDebug() << dir_.GetName();
-//    qDebug() << dir_.GetOwner();
-//    qDebug() << dir_.GetParentFolderName();
-//    qDebug() << dir_.GetSubFolderNames();
-//    qDebug() << dir_.GetSubFileNames();
-//    qDebug() << dir_.GetCreateDateTime().toString();
-//    qDebug() << dir_.GetModifyDateTime().toString();
+//    KernelManager::GetKernelManager()->GetFileSystem()->Copy("/okl/", "/abc/kkk/");
+//    KernelManager::GetKernelManager()->GetFileSystem()->Copy("/okl/sssm.ll", "/abc/abc.dat.dir.dat");
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()
