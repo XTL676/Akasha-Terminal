@@ -2,6 +2,7 @@
 #include <QException>
 #include <QMainWindow>
 #include "Kernel/ExceptionSystem/aka_status_code.h"
+#include "Terminal/UI/aka_plain_text_edit.h"
 #include "aka_global.h"
 #include "Terminal/terminal_manager.h"
 
@@ -75,5 +76,14 @@ int AkaDisplayCmd::refont(QStringList args)
     }
 
    TerminalManager::GetTerminalManager()->PrintError("Too many parameters.", KAkaTooManyParameters);
+   return 1;
+}
+
+// TODO
+int AkaDisplayCmd::cls(QStringList args)
+{
+    ((AkaPlainTextEdit*)TerminalManager::GetTerminalManager()->GetMainEditArea())->SetState(AkaPlainTextEdit::ClearScreen);
+    TerminalManager::GetTerminalManager()->GetMainEditArea()->clear();
+    ((AkaPlainTextEdit*)TerminalManager::GetTerminalManager()->GetMainEditArea())->SetState(AkaPlainTextEdit::Command);
     return 1;
 }

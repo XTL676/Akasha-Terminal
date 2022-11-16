@@ -10,6 +10,9 @@ public:
 
     // 重设字体
     static int refont(QStringList args);
+
+    // 清空当前编辑区
+    static int cls(QStringList args);
 };
 
 #endif // AKADISPLAYCMD_H

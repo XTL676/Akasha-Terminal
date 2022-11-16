@@ -17,6 +17,7 @@ void AkaPlainTextEdit::Init()
     installEventFilter(this);
 
     ConsoleHead_ = aka::KAkaConselDefaultUser + aka::KAkaConselName + aka::KAkaConselDefaultPath + aka::KAkaConselSymbol;
+    State_ = EPlainTextEditState::Command;
 }
 
 const QString AkaPlainTextEdit::GetConsoleHead()
@@ -27,6 +28,16 @@ const QString AkaPlainTextEdit::GetConsoleHead()
 void AkaPlainTextEdit::SetConsoleHead(QString user, QString path)
 {
     ConsoleHead_ = user + aka::KAkaConselName + path + aka::KAkaConselSymbol;
+}
+
+AkaPlainTextEdit::EPlainTextEditState AkaPlainTextEdit::GetState()
+{
+    return State_;
+}
+
+void AkaPlainTextEdit::SetState(EPlainTextEditState State)
+{
+    State_ = State;
 }
 
 void AkaPlainTextEdit::EnterEvent()

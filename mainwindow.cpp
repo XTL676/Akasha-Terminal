@@ -56,6 +56,11 @@ void MainWindow::on_MainInputArea_cursorPositionChanged()
     QTextCursor tc = ui->MainInputArea->textCursor();
     int current_line = tc.blockNumber();
     int nCurpos = tc.position() - tc.block().position(); // 当前光标在本行内的相对位置
+
+    // 编辑区为去除屏幕状态时
+    if(ui->MainInputArea->GetState() == AkaPlainTextEdit::EPlainTextEditState::ClearScreen)
+        CursorLine_ = current_line;
+
     // 并禁止删除头显示(如：root@Akasha:~$)
     if(current_line >= CursorLine_ && nCurpos >= ui->MainInputArea->GetConsoleHead().length())
     {
