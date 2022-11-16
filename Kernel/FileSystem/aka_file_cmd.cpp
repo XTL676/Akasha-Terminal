@@ -64,7 +64,7 @@ int AkaFileCmd::rm(QStringList args)
     {
         // 删除文件
         if(KernelManager::GetKernelManager()->GetFileSystem()->DeleteFileA(path))
-            KernelManager::GetKernelManager()->Print("Delete directory (" + path + ") successfully.", QColor("green"));
+            KernelManager::GetKernelManager()->Print("Delete File (" + path + ") successfully.", QColor("green"));
     }
     else if(args[1] == "-d")
     {

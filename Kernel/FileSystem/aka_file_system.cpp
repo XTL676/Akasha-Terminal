@@ -408,6 +408,16 @@ bool AkaFileSystem::Copy(QString from, QString to)
         }
         else
         {
+            // 重命名禁词判断
+            for(QString s:aka::KAkaFDNameForbiddenSymbols)
+            {
+                if(GetParentDirNameFromPath(to).contains(s))
+                {
+                    KernelManager::GetKernelManager()->PrintError("Directory name can't be any of \"" +
+                                                                  aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
+                    return false;
+                }
+            }
             // 命名后拷
             from_dir.SetName(GetParentDirNameFromPath(to));
 
@@ -494,6 +504,17 @@ bool AkaFileSystem::Copy(QString from, QString to)
         }
         else
         {
+            // 重命名禁词判断
+            for(QString s:aka::KAkaFDNameForbiddenSymbols)
+            {
+                if(GetParentDirNameFromPath(to).contains(s))
+                {
+                    KernelManager::GetKernelManager()->PrintError("File name can't be any of \"" +
+                                                                  aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
+                    return false;
+                }
+            }
+
             // 命名后拷
             if(GetParentDirNameFromPath(to).contains("."))
             {
