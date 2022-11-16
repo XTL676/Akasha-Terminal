@@ -235,7 +235,7 @@ int AkaFileCmd::cp(QStringList args)
         return 1;
     }
 
-    if(KernelManager::GetKernelManager()->GetFileSystem()->Copy(MakeFullPath(args[1]), MakeFullPath(args[2])))
+    if(KernelManager::GetKernelManager()->GetFileSystem()->Copy(MakeFullPath(args[1]), MakeFullPath(args[2]), false))
     {
         QString arg1 = args[1], arg2 = args[2];
         aka::PathReplace(arg1);

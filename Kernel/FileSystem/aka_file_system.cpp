@@ -342,9 +342,10 @@ bool AkaFileSystem::DeleteFileA(QString fullPath)
 /// \brief AkaFileSystem::Copy
 /// \param from 从哪个路径("/")
 /// \param to   到哪个路径("/")
+/// \param DeleteSrc 是否删除原始文件/文件夹
 /// \return 是否成功拷贝
 ///
-bool AkaFileSystem::Copy(QString from, QString to)
+bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
 {
     /**
      * to为拷贝到哪个路径，
@@ -456,6 +457,27 @@ bool AkaFileSystem::Copy(QString from, QString to)
             CopyPhysicalDir(RootDirPath_ + from.mid(0, from.length()-1),
                             RootDirPath_ + GetParentDirAtPath(to) + "/" + from_dir.GetName(), true);
         }
+
+        // 删除原始文件夹
+        if(DeleteSrc)
+        {
+            if(GetParentDirAtPath(from) == "/")
+                RootDirectory_->RemoveSubFolder(GetParentDirNameFromPath(from));
+            else
+            {
+                // 向父级文件夹删除记录
+                Directory src_parent_dir = LoadDir(GetParentDirAtPath(GetParentDirAtPath(from)) + "/" +
+                                                   GetParentDirNameFromPath(GetParentDirAtPath(from)), success);
+                if(!success) return false;
+
+                src_parent_dir.RemoveSubFolder(GetParentDirNameFromPath(from));
+                GenFileData(&src_parent_dir, RootDirPath_ + GetParentDirAtPath(GetParentDirAtPath(from)) + "/");
+            }
+            // 删除文件夹记录
+            QFile(RootDirPath_ + from.mid(0, from.length()-1) + ".dir").remove();
+            // 删除物理文件夹
+            QDir(RootDirPath_ + from).removeRecursively();
+        }
     }
     else
     {
@@ -463,6 +485,7 @@ bool AkaFileSystem::Copy(QString from, QString to)
         bool success;
         File from_file = LoadFile(from, success);
         if(!success) return false;
+        File src_file = LoadFile(from, success);
 
         if(to.endsWith("/"))
         {
@@ -578,6 +601,27 @@ bool AkaFileSystem::Copy(QString from, QString to)
 
             // 创建记录
             GenFileData(&from_file, RootDirPath_ + GetParentDirAtPath(to));
+        }
+
+        // 删除原始文件
+        if(DeleteSrc)
+        {
+            if(src_file.GetParentFolderName() == "/")
+                RootDirectory_->RemoveSubFile(src_file.GetSuffix().isEmpty() ?
+                                                    src_file.GetName() : src_file.GetName() + "." + src_file.GetSuffix());
+            else
+            {
+                // 向父级文件夹删除记录
+                Directory src_parent_dir = LoadDir(GetParentDirAtPath(GetParentDirAtPath(from)) + "/" +
+                                                   GetParentDirNameFromPath(GetParentDirAtPath(from)), success);
+                if(!success) return false;
+
+                src_parent_dir.RemoveSubFile(src_file.GetSuffix().isEmpty() ?
+                                                 src_file.GetName() : src_file.GetName() + "." + src_file.GetSuffix());
+                GenFileData(&src_parent_dir, RootDirPath_ + GetParentDirAtPath(GetParentDirAtPath(from)) + "/");
+            }
+            // 删除文件记录
+            QFile(RootDirPath_ + from + ".dat").remove();
         }
     }
     return true;

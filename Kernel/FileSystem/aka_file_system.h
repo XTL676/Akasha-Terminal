@@ -32,7 +32,7 @@ public:
     // 删除文件
     bool DeleteFileA(QString fullPath);
     // 拷贝文件或文件夹
-    bool Copy(QString from, QString to);
+    bool Copy(QString from, QString to, bool DeleteSrc);
 
     // 更换目录
     bool ChangeDir(QString path);
