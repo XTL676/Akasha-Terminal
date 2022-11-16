@@ -248,6 +248,33 @@ int AkaFileCmd::cp(QStringList args)
     return 1;
 }
 
+int AkaFileCmd::mv(QStringList args)
+{
+    if(args.length() < 3)
+    {
+        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [mv frompath topath]", KAkaMissingParameter);
+        return 1;
+    }
+
+    else if(args.length() > 3)
+    {
+        KernelManager::GetKernelManager()->PrintError("Too many parameters.", KAkaTooManyParameters);
+        return 1;
+    }
+
+    if(KernelManager::GetKernelManager()->GetFileSystem()->Copy(MakeFullPath(args[1]), MakeFullPath(args[2]), true))
+    {
+        QString arg1 = args[1], arg2 = args[2];
+        aka::PathReplace(arg1);
+        aka::PathReplace(arg2);
+        KernelManager::GetKernelManager()->Print(
+                    "Move " + arg1 + " to " + arg2 + " successfully.", QColor("green"));
+        return 1;
+    }
+
+    return 1;
+}
+
 QString AkaFileCmd::MakeFullPath(QString shortPath)
 {
     // 以"/"开头，完整路径

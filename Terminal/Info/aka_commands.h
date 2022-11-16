@@ -26,7 +26,8 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"rm", "Remove directory or file.[rm -f filepath] or [rm -d dirpath]"},&AkaFileCmd::rm},
     {{"mkf", "mf", "Create file.[mkf path (content)]"},&AkaFileCmd::mkf},
     {{"cp", "copy", "Copy file or directory to another path.[cp frompath topath]"},&AkaFileCmd::cp},
-    {{"cls", "Clear the screen."},&AkaDisplayCmd::cls}
+    {{"cls", "Clear the screen."},&AkaDisplayCmd::cls},
+    {{"mv", "move", "Move file or directory to another path.[mv frompath topath]"},&AkaFileCmd::mv}
 };
 
 #endif // AKA_COMMANDS_H
