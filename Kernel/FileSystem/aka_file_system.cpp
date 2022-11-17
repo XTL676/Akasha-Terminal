@@ -37,7 +37,7 @@ bool AkaFileSystem::DetectDataFolder()
     QDir root(RootDirPath_);
     if(!root.exists())
     {
-        KernelManager::GetKernelManager()->PrintError("Broken data folder.", KAkaBrokenDataFolder);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Broken data folder."), KAkaBrokenDataFolder);
         return false;
     }
     return true;
@@ -58,7 +58,7 @@ Directory AkaFileSystem::LoadDir(QString dirPath, bool &success)
     QFile dir(fullPath);
     if(!dir.exists())
     {
-        KernelManager::GetKernelManager()->PrintError("Directory not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Directory not exists."), KAkaInvalidPath);
         success = false;
         return Directory();
     }
@@ -92,7 +92,7 @@ File AkaFileSystem::LoadFile(QString filePath, bool &success)
     QFile file(fullPath);
     if(!file.exists())
     {
-        KernelManager::GetKernelManager()->PrintError("File data not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("File data not exists."), KAkaInvalidPath);
         success = false;
         return inFile;
     }
@@ -158,13 +158,14 @@ bool AkaFileSystem::CreateDir(QString path, QString name)
 
     if(!QDir(dirPath).exists())
     {
-        KernelManager::GetKernelManager()->PrintError("Directory path(" + path + ") not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("Directory path") + "(" + path + ")" + QObject::tr(" not exists."), KAkaInvalidPath);
         return false;
     }
 
     if(QDir(dirPath + name).exists())
     {
-        KernelManager::GetKernelManager()->PrintError("Directory already exists.", KAkaFileAlreadyExists);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Directory already exists."), KAkaFileAlreadyExists);
         return false;
     }
 
@@ -205,14 +206,14 @@ bool AkaFileSystem::DeleteDir(QString path)
     // 禁止删除根目录
     if(path == "/")
     {
-        KernelManager::GetKernelManager()->PrintError("Invalid directory path \"/\".", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Invalid directory path") + " \"/\".", KAkaInvalidPath);
         return false;
     }
 
     QString fullPath = RootDirPath_ + path;
     if(!QFile(fullPath + ".dir").exists())
     {
-        KernelManager::GetKernelManager()->PrintError("Directory not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Directory not exists."), KAkaInvalidPath);
         return false;
     }
 
@@ -302,7 +303,7 @@ bool AkaFileSystem::DeleteFileA(QString fullPath)
 {
     if(!QFile(RootDirPath_ + fullPath + ".dat").exists())
     {
-        KernelManager::GetKernelManager()->PrintError("File not exists.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("File not exists."), KAkaInvalidPath);
         return false;
     }
 
@@ -354,7 +355,7 @@ bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
      */
     if(from == "/")
     {
-        KernelManager::GetKernelManager()->PrintError("Root dir can't copy.", KAkaInvalidPath);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Root dir can't copy."), KAkaInvalidPath);
         return false;
     }
 
@@ -376,7 +377,7 @@ bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
             if(QFile(RootDirPath_ + to + from_dir.GetName() + ".dir").exists())
             {
                 // TODO 询问是否覆盖
-                KernelManager::GetKernelManager()->PrintError("Directory already exists.", KAkaFileAlreadyExists);
+                KernelManager::GetKernelManager()->PrintError(QObject::tr("Directory already exists."), KAkaFileAlreadyExists);
                 return false;
             }
 
@@ -414,7 +415,7 @@ bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
             {
                 if(GetParentDirNameFromPath(to).contains(s))
                 {
-                    KernelManager::GetKernelManager()->PrintError("Directory name can't be any of \"" +
+                    KernelManager::GetKernelManager()->PrintError(QObject::tr("Directory name can't be any of") + " \"" +
                                                                   aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
                     return false;
                 }
@@ -426,7 +427,7 @@ bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
             if(QFile(RootDirPath_ + GetParentDirAtPath(to) + "/" + from_dir.GetName() + ".dir").exists())
             {
                 // TODO 询问是否覆盖
-                KernelManager::GetKernelManager()->PrintError("Directory already exists.", KAkaFileAlreadyExists);
+                KernelManager::GetKernelManager()->PrintError(QObject::tr("Directory already exists."), KAkaFileAlreadyExists);
                 return false;
             }
 
@@ -497,7 +498,7 @@ bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
             if(QFile(RootDirPath_ + to + fileName + ".dat").exists())
             {
                 // TODO 询问是否覆盖
-                KernelManager::GetKernelManager()->PrintError("File already exists.", KAkaFileAlreadyExists);
+                KernelManager::GetKernelManager()->PrintError(QObject::tr("File already exists."), KAkaFileAlreadyExists);
                 return false;
             }
 
@@ -532,7 +533,7 @@ bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
             {
                 if(GetParentDirNameFromPath(to).contains(s))
                 {
-                    KernelManager::GetKernelManager()->PrintError("File name can't be any of \"" +
+                    KernelManager::GetKernelManager()->PrintError(QObject::tr("File name can't be any of") + " \"" +
                                                                   aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
                     return false;
                 }
@@ -574,7 +575,7 @@ bool AkaFileSystem::Copy(QString from, QString to, bool DeleteSrc)
             if(QFile(RootDirPath_ + GetParentDirAtPath(to) + "/" + fileName + ".dat").exists())
             {
                 // TODO 询问是否覆盖
-                KernelManager::GetKernelManager()->PrintError("File already exists.", KAkaFileAlreadyExists);
+                KernelManager::GetKernelManager()->PrintError(QObject::tr("File already exists."), KAkaFileAlreadyExists);
                 return false;
             }
 

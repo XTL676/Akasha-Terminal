@@ -8,12 +8,12 @@ int AkaFileCmd::mkdir(QStringList args)
 {
     if(args.length() < 2)
     {
-        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [mkdir path]", KAkaMissingParameter);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("No or missing parameters.Should be [mkdir path]"), KAkaMissingParameter);
         return 1;
     }
     else if(args.length() > 2)
     {
-        KernelManager::GetKernelManager()->PrintError("Too many parameters.There should only be one path.", KAkaTooManyParameters);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Too many parameters.There should only be one path."), KAkaTooManyParameters);
         return 1;
     }
 
@@ -25,7 +25,7 @@ int AkaFileCmd::mkdir(QStringList args)
     {
         if(name.contains(s))
         {
-            KernelManager::GetKernelManager()->PrintError("Directory name can't be any of \"" +
+            KernelManager::GetKernelManager()->PrintError(QObject::tr("Directory name can't be any of") + " \"" +
                                                           aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
             return 1;
         }
@@ -36,7 +36,9 @@ int AkaFileCmd::mkdir(QStringList args)
     CurrentDirPath = CurrentDirPath.endsWith("/") ? CurrentDirPath : CurrentDirPath + "/";
 
     if(KernelManager::GetKernelManager()->GetFileSystem()->CreateDir(CurrentDirPath + list.join("/"), name))
-        KernelManager::GetKernelManager()->Print("Create directory \"" + name + "\" successfully.(" + args[1] + ")", QColor("green"));
+        KernelManager::GetKernelManager()->Print(
+                    QObject::tr("Create directory") + " \"" + name + "\" " + QObject::tr("successfully.") +
+                    "(" + args[1] + ")", QColor("green"));
 
     return 1;
 }
@@ -45,13 +47,15 @@ int AkaFileCmd::rm(QStringList args)
 {
     if(args.length() < 3)
     {
-        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [rm -f filepath] or [rm -d dirpath]", KAkaMissingParameter);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("No or missing parameters.Should be [rm -f filepath] or [rm -d dirpath]"), KAkaMissingParameter);
         return 1;
     }
 
     else if(args.length() > 3)
     {
-        KernelManager::GetKernelManager()->PrintError("Too many parameters.There should only be one file or dir path.", KAkaTooManyParameters);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("Too many parameters.There should only be one file or dir path."), KAkaTooManyParameters);
         return 1;
     }
 
@@ -64,16 +68,19 @@ int AkaFileCmd::rm(QStringList args)
     {
         // 删除文件
         if(KernelManager::GetKernelManager()->GetFileSystem()->DeleteFileA(path))
-            KernelManager::GetKernelManager()->Print("Delete File (" + path + ") successfully.", QColor("green"));
+            KernelManager::GetKernelManager()->Print(
+                        QObject::tr("Delete file") + " (" + path + ") " + QObject::tr("successfully."), QColor("green"));
     }
     else if(args[1] == "-d")
     {
         // 删除文件夹
         if(KernelManager::GetKernelManager()->GetFileSystem()->DeleteDir(path))
-            KernelManager::GetKernelManager()->Print("Delete directory (" + path + ") successfully.", QColor("green"));
+            KernelManager::GetKernelManager()->Print(
+                        QObject::tr("Delete directory") + " (" + path + ") " + QObject::tr("successfully."), QColor("green"));
     }
     else
-        KernelManager::GetKernelManager()->PrintError("Invalid parameter.Should be -f for file or -d for dir.", KAkaInvalidParameter);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("Invalid parameter.Should be -f for file or -d for dir."), KAkaInvalidParameter);
 
     return 1;
 }
@@ -82,12 +89,13 @@ int AkaFileCmd::mkf(QStringList args)
 {
     if(args.length() < 2)
     {
-        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [mkf path]", KAkaMissingParameter);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("No or missing parameters.Should be [mkf path]"), KAkaMissingParameter);
         return 1;
     }
     else if(args.length() > 3)
     {
-        KernelManager::GetKernelManager()->PrintError("Too many parameters.", KAkaTooManyParameters);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Too many parameters."), KAkaTooManyParameters);
         return 1;
     }
 
@@ -127,7 +135,7 @@ int AkaFileCmd::mkf(QStringList args)
     {
         if(name.contains(s))
         {
-            KernelManager::GetKernelManager()->PrintError("File name can't be any of \"" +
+            KernelManager::GetKernelManager()->PrintError(QObject::tr("File name can't be any of") + " \"" +
                                                           aka::KAkaFDNameForbiddenSymbols.join(" ") + "\".", KAkaInvalidName);
             return 1;
         }
@@ -140,7 +148,9 @@ int AkaFileCmd::mkf(QStringList args)
 
     // 创建文件.dat
     if(KernelManager::GetKernelManager()->GetFileSystem()->CreateFileA(path, name, suffix, content))
-        KernelManager::GetKernelManager()->Print("Create directory \"" + fileFullName + "\" successfully.(" + args[1] + ")", QColor("green"));
+        KernelManager::GetKernelManager()->Print(
+                   QObject::tr("Create directory") + " \"" + fileFullName + "\" " + QObject::tr("successfully.") +
+                    "(" + args[1] + ")", QColor("green"));
 
     return 1;
 }
@@ -149,12 +159,14 @@ int AkaFileCmd::cd(QStringList args)
 {
     if(args.length() < 2)
     {
-        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [cd path]", KAkaMissingParameter);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("No or missing parameters.Should be [cd path]"), KAkaMissingParameter);
         return 1;
     }
     else if(args.length() > 2)
     {
-        KernelManager::GetKernelManager()->PrintError("Too many parameters.There should only be one path.", KAkaTooManyParameters);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("Too many parameters.There should only be one path."), KAkaTooManyParameters);
         return 1;
     }
 
@@ -186,7 +198,8 @@ int AkaFileCmd::ls(QStringList args)
 {
     if(args.length() > 2)
     {
-        KernelManager::GetKernelManager()->PrintError("Too many parameters.There should only be one path.", KAkaTooManyParameters);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("Too many parameters.There should only be one path."), KAkaTooManyParameters);
         return 1;
     }
 
@@ -225,13 +238,14 @@ int AkaFileCmd::cp(QStringList args)
 {
     if(args.length() < 3)
     {
-        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [cp frompath topath]", KAkaMissingParameter);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("No or missing parameters.Should be [cp frompath topath]"), KAkaMissingParameter);
         return 1;
     }
 
     else if(args.length() > 3)
     {
-        KernelManager::GetKernelManager()->PrintError("Too many parameters.", KAkaTooManyParameters);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Too many parameters."), KAkaTooManyParameters);
         return 1;
     }
 
@@ -241,7 +255,8 @@ int AkaFileCmd::cp(QStringList args)
         aka::PathReplace(arg1);
         aka::PathReplace(arg2);
         KernelManager::GetKernelManager()->Print(
-                    "Copy " + arg1 + " to " + arg2 + " successfully.", QColor("green"));
+                    QObject::tr("Copy") + " " + arg1 + " " + QObject::tr("to") +
+                    " " + arg2 + " " + QObject::tr("successfully."), QColor("green"));
         return 1;
     }
 
@@ -252,13 +267,14 @@ int AkaFileCmd::mv(QStringList args)
 {
     if(args.length() < 3)
     {
-        KernelManager::GetKernelManager()->PrintError("No or missing parameters.Should be [mv frompath topath]", KAkaMissingParameter);
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("No or missing parameters.Should be [mv frompath topath]"), KAkaMissingParameter);
         return 1;
     }
 
     else if(args.length() > 3)
     {
-        KernelManager::GetKernelManager()->PrintError("Too many parameters.", KAkaTooManyParameters);
+        KernelManager::GetKernelManager()->PrintError(QObject::tr("Too many parameters."), KAkaTooManyParameters);
         return 1;
     }
 
@@ -268,7 +284,8 @@ int AkaFileCmd::mv(QStringList args)
         aka::PathReplace(arg1);
         aka::PathReplace(arg2);
         KernelManager::GetKernelManager()->Print(
-                    "Move " + arg1 + " to " + arg2 + " successfully.", QColor("green"));
+                    QObject::tr("Move") + " " + arg1 + " " + QObject::tr("to") +
+                    " " + arg2 + " " + QObject::tr("successfully."), QColor("green"));
         return 1;
     }
 

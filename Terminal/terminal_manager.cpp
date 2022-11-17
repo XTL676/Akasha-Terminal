@@ -44,7 +44,7 @@ void TerminalManager::Print(QString msg, QColor color)
 
 void TerminalManager::PrintError(QString msg, int code)
 {
-    Print("Error:" + msg + "[" + QString::number(code) + "]", QColor("red"));
+    Print(QObject::tr("Error:") + msg + "[" + QString::number(code) + "]", QColor("red"));
 }
 
 QPlainTextEdit *TerminalManager::GetMainEditArea()

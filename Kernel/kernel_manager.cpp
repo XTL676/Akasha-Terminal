@@ -71,7 +71,7 @@ void KernelManager::Print(QString msg, QColor color, bool newline)
 
 void KernelManager::PrintError(QString msg, int code)
 {
-    Print("Error:" + msg + "[" + QString::number(code) + "]", QColor("red"));
+    Print(QObject::tr("Error:") + msg + "[" + QString::number(code) + "]", QColor("red"));
 }
 
 QPlainTextEdit *KernelManager::GetMainEditArea()

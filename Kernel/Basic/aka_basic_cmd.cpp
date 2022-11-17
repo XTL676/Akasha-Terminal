@@ -5,7 +5,7 @@
 
 int AkaBasicCmd::help(QStringList args)
 {
-    KernelManager::GetKernelManager()->Print("\tAkasha Terminal Commands");
+    KernelManager::GetKernelManager()->Print("\t" + QObject::tr("Akasha Terminal Commands"));
     for(auto it:KBuiltin_Cmds.toStdMap())
         KernelManager::GetKernelManager()->Print(it.first.front() + "\t" + it.first.back());
     return 1;
