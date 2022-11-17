@@ -57,6 +57,11 @@ QMainWindow *TerminalManager::GetMainWindow()
     return MainWindow_;
 }
 
+QApplication *TerminalManager::GetApp()
+{
+    return (QApplication*)QApplication::instance();
+}
+
 AkaInputSystem *TerminalManager::GetInputSystem()
 {
     if(InputSystem_ == nullptr)

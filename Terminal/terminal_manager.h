@@ -2,6 +2,7 @@
 #define TERMINALMANAGER_H
 #include <QMainWindow>
 #include <QPlainTextEdit>
+#include <QApplication>
 #include "Terminal/Input/aka_input_system.h"
 
 class TerminalManager
@@ -16,6 +17,7 @@ public:
 
     QPlainTextEdit* GetMainEditArea();
     QMainWindow* GetMainWindow();
+    QApplication* GetApp();
 
     AkaInputSystem* GetInputSystem();
 

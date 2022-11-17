@@ -9,6 +9,7 @@ namespace aka {
     const bool KAkaDebugOutput = false; // 是否开启调试输出
 
     const QString KAkaWindowDefaultTitle = "Akasha Terminal";
+    const QString KAkaWindowDefaultTranslate = ":/qm/Resources/aka_en_us.qm"; // 默认启动界面语言
     const QSize KAkaWindowDefaultSize = QSize(1920, 1080);
     const QSize KAkaWindowMinimumSize = QSize(560, 310);
 

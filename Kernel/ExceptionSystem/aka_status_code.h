@@ -13,4 +13,5 @@ const int KAkaFileAlreadyExists = 0x107;
 const int KAkaInvalidParameter = 0x108;
 const int KAkaInvalidName = 0x109;
 const int KAkaBrokenDataFolder = 0x110;
+const int KAkaFileNotFound = 0x111;
 #endif // AKA_STATUS_CODE_H

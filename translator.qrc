@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/qm">
+        <file>Resources/aka_en_us.qm</file>
+        <file>Resources/aka_zh_cn.qm</file>
+    </qresource>
+</RCC>

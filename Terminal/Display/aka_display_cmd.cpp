@@ -1,10 +1,12 @@
 #include "aka_display_cmd.h"
 #include <QException>
 #include <QMainWindow>
+#include <QTranslator>
 #include "Kernel/ExceptionSystem/aka_status_code.h"
 #include "Terminal/UI/aka_plain_text_edit.h"
 #include "aka_global.h"
 #include "Terminal/terminal_manager.h"
+#include "mainwindow.h"
 
 int AkaDisplayCmd::resize(QStringList args)
 {

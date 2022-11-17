@@ -52,6 +52,13 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
+TRANSLATIONS +=Resources/aka_en_us.ts \
+               Resources/aka_zh_cn.ts
+
+lupdate_only{
+    SOURCES+ =H:/QTPros/Dev/AkashaTerminal/
+}
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
@@ -59,3 +66,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     .gitignore
+
+RESOURCES += \
+    translator.qrc

@@ -46,7 +46,7 @@ void MainWindow::Init()
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 
     // TEST
-//    KernelManager::GetKernelManager()->GetFileSystem()->Copy("/test/899/abc.dat.dir.dat", "/test/899", true);
+    //    KernelManager::GetKernelManager()->GetFileSystem()->Copy("/test/899/abc.dat.dir.dat", "/test/899", true);
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()
