@@ -46,7 +46,12 @@ void MainWindow::Init()
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 
     // TEST
-    //    KernelManager::GetKernelManager()->GetFileSystem()->Copy("/test/899/abc.dat.dir.dat", "/test/899", true);
+//    bool b;
+//    File src = KernelManager::GetKernelManager()->GetFileSystem()->LoadFile("/8", b);
+//    qDebug() << src.GetContent();
+//    KernelManager::GetKernelManager()->GetFileSystem()->ModifyFileContent("/8", "abcdefg");
+//    File aft = KernelManager::GetKernelManager()->GetFileSystem()->LoadFile("/8", b);
+//    qDebug() << aft.GetContent();
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()

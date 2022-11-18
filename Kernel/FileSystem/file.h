@@ -17,9 +17,13 @@ private:
 public:
     // 获取后缀名
     QString GetSuffix();
+    // 获取内容
+    QString GetContent();
 
     // 设置后缀名
     void SetSuffix(QString suffix);
+    // 设置内容
+    void SetContent(QString content);
 
     bool IsChildClass() override;
 

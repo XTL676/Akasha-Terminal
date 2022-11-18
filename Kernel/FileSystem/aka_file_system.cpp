@@ -757,6 +757,26 @@ bool AkaFileSystem::List(QString path)
     return true;
 }
 
+/// 修改文件内容
+/// \brief AkaFileSystem::ModifyFileContent
+/// \param path 文件路径("/")
+/// \param content 修改后的内容
+/// \return
+///
+bool AkaFileSystem::ModifyFileContent(QString path, QString content)
+{
+    aka::PathReplace(path);
+
+    bool success;
+    File src = LoadFile(path, success);
+    if(!success) return false;
+
+    src.SetContent(content); // 设置文件内容
+    GenFileData(&src, RootDirPath_ + GetParentDirAtPath(path)); // 重新生成并覆盖源文件
+
+    return true;
+}
+
 QString AkaFileSystem::GetParentDirNameFromPath(QString path)
 {
     aka::PathReplace(path);
