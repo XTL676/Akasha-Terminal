@@ -21,6 +21,8 @@ public:
     static int mv(QStringList args);
     // 编辑文件
     static int edit(QStringList args);
+    // 查看文件
+    static int view(QStringList args);
 
 private:
     // 将缺省转化为全路径（绝对路径）

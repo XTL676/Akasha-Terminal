@@ -310,9 +310,29 @@ int AkaFileCmd::edit(QStringList args)
     }
 
     if(args.length() == 2)
-    {
         ((AkaPlainTextEdit*)KernelManager::GetKernelManager()->GetMainEditArea())->ShowEditFileUI(MakeFullPath(args[1]));
+
+    return 1;
+}
+
+int AkaFileCmd::view(QStringList args)
+{
+    if(args.length() < 2)
+    {
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("No or missing parameters.Should be [edit filepath]"), KAkaMissingParameter);
+        return 1;
     }
+
+    if(args.length() > 2)
+    {
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("Too many parameters.There should only be one path."), KAkaTooManyParameters);
+        return 1;
+    }
+
+    if(args.length() == 2)
+        KernelManager::GetKernelManager()->GetFileSystem()->ViewFileContent(MakeFullPath(args[1]));
 
     return 1;
 }

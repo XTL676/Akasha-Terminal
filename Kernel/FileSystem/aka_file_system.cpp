@@ -777,6 +777,24 @@ bool AkaFileSystem::ModifyFileContent(QString path, QString content)
     return true;
 }
 
+/// 查看文件内容
+/// \brief AkaFileSystem::ViewFileContent
+/// \param path 文件路径("/")
+/// \return 是否查看成功
+///
+bool AkaFileSystem::ViewFileContent(QString path)
+{
+    aka::PathReplace(path);
+
+    bool success;
+    File src = LoadFile(path, success);
+    if(!success) return false;
+
+    KernelManager::GetKernelManager()->Print(src.GetContent());
+
+    return true;
+}
+
 QString AkaFileSystem::GetParentDirNameFromPath(QString path)
 {
     aka::PathReplace(path);

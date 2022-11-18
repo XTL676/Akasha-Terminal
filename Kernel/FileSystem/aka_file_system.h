@@ -41,6 +41,8 @@ public:
 
     // 修改文件内容
     bool ModifyFileContent(QString path, QString content);
+    // 查看文件内容
+    bool ViewFileContent(QString path);
 
 private:
     QString RootDirPath_; // 包含程序目录路径

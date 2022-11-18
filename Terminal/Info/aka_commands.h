@@ -29,7 +29,8 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"cp", "copy", QObject::tr("Copy file or directory to another path.[cp frompath topath]")},&AkaFileCmd::cp},
     {{"cls", QObject::tr("Clear the screen.")},&AkaDisplayCmd::cls},
     {{"mv", "move", QObject::tr("Move file or directory to another path.[mv frompath topath]")},&AkaFileCmd::mv},
-    {{"edit", "ed", QObject::tr("Edit file content.[edit filepath]")},&AkaFileCmd::edit}
+    {{"edit", "ed", QObject::tr("Edit file content.[edit filepath]")},&AkaFileCmd::edit},
+    {{"view", "vi", QObject::tr("View file content.[view filepath]")},&AkaFileCmd::view}
 };
 
 #endif // AKA_COMMANDS_H
