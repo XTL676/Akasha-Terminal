@@ -101,9 +101,9 @@ File AkaFileSystem::LoadFile(QString filePath, bool &success)
     QFile f(fullPath);
     f.open(QIODevice::ReadOnly);
     // 反序列化
-    QDataStream in(&f);
-    in.setVersion(6);
-    in >> inFile;
+    QTextStream in(&f);
+//    in >> inFile;
+    inFile.Deserialize(in);
     f.close();
 
     success = true;
@@ -123,9 +123,9 @@ void AkaFileSystem::GenFileData(BaseFile *file, QString path)
         QFile f(outputDatFullPath);
         if(f.exists()) f.remove();
         f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
-        QDataStream out(&f);
-        out.setVersion(6);
-        out << *fileObj;
+        QTextStream out(&f);
+//        out << *fileObj;
+        fileObj->Serialize(out);
         f.close();
     }
     else if(dynamic_cast<Directory*>(file) != NULL)

@@ -1,20 +1,20 @@
 #ifndef FILE_H
 #define FILE_H
-#include <QDataStream>
+#include <QTextStream>
 #include "base_file.h"
 
 class File: public BaseFile
 {
-    // 重载序列化
-    friend QDataStream &operator<<(QDataStream &output , const File &dataInfo);
-    // 重载反序列化
-    friend QDataStream &operator>>(QDataStream &input , File &dataInfo);
-
 private:
     QString Suffix_; // 后缀名
     QString Content_; // 文件内容
 
 public:
+    // 序列化
+    void Serialize(QTextStream& out);
+    // 反序列化
+    void Deserialize(QTextStream& in);
+
     // 获取后缀名
     QString GetSuffix();
     // 获取内容
