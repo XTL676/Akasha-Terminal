@@ -46,16 +46,13 @@ void MainWindow::Init()
     KernelManager::GetKernelManager()->Init(ui->MainInputArea);
 
     // TEST
-//    bool b;
-//    File src = KernelManager::GetKernelManager()->GetFileSystem()->LoadFile("/8", b);
-//    qDebug() << src.GetContent();
-//    KernelManager::GetKernelManager()->GetFileSystem()->ModifyFileContent("/8", "abcdefg");
-//    File aft = KernelManager::GetKernelManager()->GetFileSystem()->LoadFile("/8", b);
-//    qDebug() << aft.GetContent();
 }
 
 void MainWindow::on_MainInputArea_cursorPositionChanged()
 {
+    // 如果处于编辑文件状态，则不限制
+    if(ui->MainInputArea->GetState() == AkaPlainTextEdit::EPlainTextEditState::EditFile) return;
+
     // 如果下一次光标位置不为读取光标位置的后面，则设置只读
     QTextCursor tc = ui->MainInputArea->textCursor();
     int current_line = tc.blockNumber();

@@ -28,7 +28,8 @@ static const builtin_cmd_map KBuiltin_Cmds =
     {{"mkf", "mf", QObject::tr("Create file.[mkf path (content)]")},&AkaFileCmd::mkf},
     {{"cp", "copy", QObject::tr("Copy file or directory to another path.[cp frompath topath]")},&AkaFileCmd::cp},
     {{"cls", QObject::tr("Clear the screen.")},&AkaDisplayCmd::cls},
-    {{"mv", "move", QObject::tr("Move file or directory to another path.[mv frompath topath]")},&AkaFileCmd::mv}
+    {{"mv", "move", QObject::tr("Move file or directory to another path.[mv frompath topath]")},&AkaFileCmd::mv},
+    {{"edit", "ed", QObject::tr("Edit file content.[edit filepath]")},&AkaFileCmd::edit}
 };
 
 #endif // AKA_COMMANDS_H

@@ -19,6 +19,11 @@ public:
     // 初始化
     void Init();
 
+    // 显示编辑文件界面
+    void ShowEditFileUI(QString path);
+    // 关闭编辑文件界面
+    void CloseEditFileUI();
+
     // 获取显示头
     const QString GetConsoleHead();
     // 设置显示头
@@ -35,10 +40,15 @@ protected:
 
     // 回车事件
     void EnterEvent();
+    // ESC事件
+    void ESCEvent();
 
 private:
     QString ConsoleHead_;
     EPlainTextEditState State_;
+
+    QString PlainContent_;
+    QString EditFilePath_;
 
 signals:
 

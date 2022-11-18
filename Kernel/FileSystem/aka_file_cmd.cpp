@@ -1,6 +1,7 @@
 #include "aka_file_cmd.h"
 #include "Kernel/ExceptionSystem/aka_status_code.h"
 #include "Kernel/kernel_manager.h"
+#include "Terminal/UI/aka_plain_text_edit.h"
 #include "aka_global.h"
 #include <QFile>
 
@@ -287,6 +288,30 @@ int AkaFileCmd::mv(QStringList args)
                     QObject::tr("Move") + " " + arg1 + " " + QObject::tr("to") +
                     " " + arg2 + " " + QObject::tr("successfully."), QColor("green"));
         return 1;
+    }
+
+    return 1;
+}
+
+int AkaFileCmd::edit(QStringList args)
+{
+    if(args.length() < 2)
+    {
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("No or missing parameters.Should be [edit filepath]"), KAkaMissingParameter);
+        return 1;
+    }
+
+    if(args.length() > 2)
+    {
+        KernelManager::GetKernelManager()->PrintError(
+                    QObject::tr("Too many parameters.There should only be one path."), KAkaTooManyParameters);
+        return 1;
+    }
+
+    if(args.length() == 2)
+    {
+        ((AkaPlainTextEdit*)KernelManager::GetKernelManager()->GetMainEditArea())->ShowEditFileUI(MakeFullPath(args[1]));
     }
 
     return 1;

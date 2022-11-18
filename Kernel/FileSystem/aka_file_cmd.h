@@ -19,6 +19,8 @@ public:
     static int cp(QStringList args);
     // 移动文件或文件夹
     static int mv(QStringList args);
+    // 编辑文件
+    static int edit(QStringList args);
 
 private:
     // 将缺省转化为全路径（绝对路径）

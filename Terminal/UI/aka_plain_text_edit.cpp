@@ -2,6 +2,7 @@
 #include <QTextBlock>
 #include <QApplication>
 #include "Kernel/ExceptionSystem/aka_status_code.h"
+#include "Kernel/kernel_manager.h"
 #include "Terminal/terminal_manager.h"
 #include "aka_global.h"
 
@@ -17,6 +18,38 @@ void AkaPlainTextEdit::Init()
     installEventFilter(this);
 
     ConsoleHead_ = aka::KAkaConselDefaultUser + aka::KAkaConselName + aka::KAkaConselDefaultPath + aka::KAkaConselSymbol;
+    State_ = EPlainTextEditState::Command;
+}
+
+void AkaPlainTextEdit::ShowEditFileUI(QString path)
+{
+    EditFilePath_ = path;
+    // 保存编辑区域原内容
+    PlainContent_ = toPlainText();
+    // 设置状态
+    State_ = EPlainTextEditState::EditFile;
+    // 清空区域
+    clear();
+    // 获取文件对象
+    bool success;
+    File file = KernelManager::GetKernelManager()->GetFileSystem()->LoadFile(path, success);
+    if(!success) return;
+    // 添加文件内容到编辑区域
+    appendPlainText(file.GetContent());
+    // 设置可读写
+    setReadOnly(false);
+}
+
+void AkaPlainTextEdit::CloseEditFileUI()
+{
+    // 清空区域
+    clear();
+    // 还原之前的命令界面
+    appendPlainText(PlainContent_);
+    appendPlainText(GetConsoleHead());
+    // 移动光标
+    moveCursor(QTextCursor::End);
+    // 设置状态
     State_ = EPlainTextEditState::Command;
 }
 
@@ -42,6 +75,8 @@ void AkaPlainTextEdit::SetState(EPlainTextEditState State)
 
 void AkaPlainTextEdit::EnterEvent()
 {
+    if(State_ == EPlainTextEditState::EditFile) return;
+
     // 获取当前光标位置所在行内容
     QTextCursor tc = textCursor(); // 获取当前光标
     int rowNum = tc.blockNumber(); // 获取光标所在行的行号
@@ -58,11 +93,26 @@ void AkaPlainTextEdit::EnterEvent()
     if(status <= KAkaNormalExit)
         qApp->exit(status); // 关闭程序
 
-    // 下一次头显示
-    appendPlainText(ConsoleHead_);
-    // 将光标移到末尾
-    tc.movePosition(QTextCursor::End);
-    setTextCursor(tc);
+    if(State_ != EPlainTextEditState::EditFile)
+    {
+        // 下一次头显示
+        appendPlainText(ConsoleHead_);
+        // 将光标移到末尾
+        tc.movePosition(QTextCursor::End);
+        setTextCursor(tc);
+    }
+}
+
+void AkaPlainTextEdit::ESCEvent()
+{
+    /**
+     * 文件编辑界面
+     *   退出界面：按下ESC
+     */
+    if(State_ == EPlainTextEditState::EditFile)
+    {
+        CloseEditFileUI();
+    }
 }
 
 bool AkaPlainTextEdit::eventFilter(QObject *target, QEvent *event)
@@ -75,6 +125,8 @@ bool AkaPlainTextEdit::eventFilter(QObject *target, QEvent *event)
         // 回车键
         if(key->key() == Qt::Key::Key_Return)
         {
+            if(State_ == EPlainTextEditState::EditFile) return QWidget::eventFilter(target,event);
+
             // 回车事件
             EnterEvent();
             return true;
@@ -83,11 +135,28 @@ bool AkaPlainTextEdit::eventFilter(QObject *target, QEvent *event)
         // 退格键
         if(key->key() == Qt::Key::Key_Backspace)
         {
+            if(State_ == EPlainTextEditState::EditFile) return QWidget::eventFilter(target,event);
+
             // 回车事件(禁止删除头显示(如：root@Akasha:~$))
             QTextCursor tc = textCursor();
             int nCurpos = tc.position() - tc.block().position(); // 当前光标在本行内的相对位置
             if(nCurpos <= ConsoleHead_.length())
                 return true;
+        }
+
+        // ESC
+        if(key->key() == Qt::Key::Key_Escape)
+        {
+            // ESC事件
+            ESCEvent();
+            return true;
+        }
+
+        // Ctrl + S 保存编辑
+        if(key->key() == Qt::Key::Key_S  &&  key->modifiers() == Qt::ControlModifier)
+        {
+            KernelManager::GetKernelManager()->GetFileSystem()->ModifyFileContent(EditFilePath_, toPlainText());
+            return true;
         }
     }
     return QWidget::eventFilter(target,event);
