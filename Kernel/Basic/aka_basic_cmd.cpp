@@ -3,7 +3,7 @@
 #include "Terminal/Info/aka_commands.h"
 #include "Kernel/kernel_manager.h"
 
-int AkaBasicCmd::help(QStringList args)
+int AkaBasicCmd::help([[maybe_unused]] QStringList args)
 {
     KernelManager::GetKernelManager()->Print("\t" + QObject::tr("Akasha Terminal Commands"));
     for(auto it:KBuiltin_Cmds.toStdMap())
@@ -11,7 +11,7 @@ int AkaBasicCmd::help(QStringList args)
     return 1;
 }
 
-int AkaBasicCmd::exit(QStringList args)
+int AkaBasicCmd::exit([[maybe_unused]] QStringList args)
 {
     return KAkaNormalExit;
 }

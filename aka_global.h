@@ -32,7 +32,7 @@ namespace aka {
     const QStringList KAkaFDNameForbiddenSymbols = {"<", ">", "/", "\\", "*", "?", "\"", "|", ":"};
 
     // 判断字符串是否为纯数字
-    static bool StringIsNumber(QString &qstrSrc)
+    [[maybe_unused]] static bool StringIsNumber(QString &qstrSrc)
     {
         QByteArray ba = qstrSrc.toLatin1();
         const char *s = ba.data();
