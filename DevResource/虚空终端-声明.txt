@@ -1,0 +1,13 @@
+Akasha Terminal
+编程语言：C++
+版本：v1.0
+版本号：-
+HASH：-
+
+
+图标来源：mihoyo
+灵感来源：https://www.bilibili.com/video/BV1rv4y1c7fZ
+shell终端：https://www.bilibili.com/video/BV17W4y1H7GC
+技术文档：https://learn.microsoft.com/zh-cn/
+
+开启口令：愿吾得以聆听神明的智慧之声
